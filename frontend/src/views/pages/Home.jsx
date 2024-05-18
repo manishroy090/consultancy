@@ -110,19 +110,19 @@ export default function Home() {
        
       <div className="offer text-white bg-black flex flex-col justify-center items-center space-y-4 p-14">
         <span className="mt-8 text-xl">What We Offer</span>
-        <h1 className="text-3gxl font-semibold">
+        <h1 className="text-xl sm:text-3xl text-nowrap font-semibold">
           Professional Offer For Immigrate
         </h1>
-        <div className="container p-12 pt-12  flex flex-wrap space-y-8 ">
+        <div className="container p-12 pt-24  flex flex-wrap space-y-16 sm:space-x-24  sm:space-y-0  ">
     
           {offers.length>0 ? (
               offers.map((item,index)=>(
-                <div className="w-96 relative p-4 flex flex-col  space-y-4 offercard cardone ">
-                  <div className=" w-20 absolute  border-none rounded-full bottom-60 sm:bottom-82">
+                <div className="w-96 sm:w-/4 relative p-4 flex flex-col  space-y-4 offercard cardone py-12">
+                  <div className=" w-20 absolute  border-none rounded-full  bottom-36 sm:bottom-[9rem]">
                     <img src={`http://localhost:8000/image/offer/${item.icon}`} className="object-fit h-20 rounded-full "></img>
                   </div>
       
-                  <div className="flex flex-col py-6">
+                  <div className="flex flex-col  mt-4">
                     <span className="text-2xl">
                          {item.title}
                     </span>
@@ -146,17 +146,17 @@ export default function Home() {
         </div>
         {/* <img src={iconfive} className="object-fill "></img> */}
       </div>
-      <div className="container mx-auto p-32  flex space-x-24 ">
-        <div>
-          <div className="bg-sky-300">
-            <img className="object-fill h-96 w-96" src={aboutimgone} />
+      <div className="container relative mx-auto sm:p-32  p-8   flex sm:flex-row flex-col sm:space-x-60 bg-red-600">
+        <div className="order-last sm:order-first">
+          <div className="">
+            <img className="object-fill sm:h-96 sm:w-[72rem] h-72  w-60" src={aboutimgone} />
           </div>
-          <div className="absolute bg-red-600   border-none rounded-full p-6 ">
-            <img className="object-fill h-20 " src={abouticonfive} />
+          <div className="absolute bg-red-600   border-none rounded-full p-2 sm:left-16 sm:bottom-32 bottom-[1rem] left-4">
+            <img className="object-fill sm:h-20 h-12 " src={abouticonfive} />
           </div>
-          <div className="bg-sky-300  absolute left-96 ">
+          <div className="bg-sky-300  absolute sm:left-80 sm:bottom-8 bottom-[1rem]  left-[8rem]">
             <img
-              className="object-fill h-[13rem] w-80"
+              className="object-fill sm:h-[16rem] sm:w-[23rem] h-30 w-48 "
               src={aboutimage2}
             />
           </div>
@@ -166,13 +166,13 @@ export default function Home() {
           <h1 className="text-3xl font-semibold">
             {aboutus.title}
           </h1>
-          <p className=" mt-8 ">
-           {textFilter()}
+          <p className=" mt-8">
+           {textFilter(aboutus.description,250)}
           </p>
           <div className="flex">
             <div className="flex  space-x-10">
               <div className="parent flex flex-col space-y-10">
-                <ul className="about_list">
+                <ul className="about_list text-nowrap">
                   {aboutusdetails.map((item)=>(
 
                   <li>{item.title}</li>
@@ -184,28 +184,28 @@ export default function Home() {
                 </button>
               </div>
 
-              <div className="flex flex-col bg-slate-300  w-40 text-center pb-1 h-40">
+              {/* <div className="flex flex-col bg-slate-300  w-40 text-center pb-1 h-40 ">
                 <hr className="h-1    bg-red-600 border-0 dark:bg-red-700  "></hr>
                 <span className="mt-4 text-xl font-bold">We 're</span>
                 <span className="text-4xl flex justify-center items-center text-red-600 font-semibold ">
                   25 <AddIcon></AddIcon>
                 </span>
-                <span className=" font-bold w-32 ">Years Of Experience</span>
-              </div>
+                <span className=" font-bold w-32  ">Years Of Experience</span>
+              </div> */}
             </div>
             <div></div>
           </div>
         </div>
       </div>{" "}
-      <div className="container mx-auto text-center relative p-28">
-        <h1 className="text-red-600 text-2xl font-semibold">
+      <div className="container mx-auto text-center relative sm:p-28  p-8 bg-blue-600">
+        <h1 className="text-red-600 text-2xl font-semibold text-nowrap">
           Service We provide
         </h1>
 
-        <span className="text-3xl mt-4 font-semibold">
+        <span className="sm:text-3xl text-xs mt-4 font-semibold text-nowrap">
           Explore Our Visa Citizenship & Immigration Service
         </span>
-        <div className=" flex space-x-8 mt-6">
+        <div className=" flex flex-col sm:flex-row  sm:space-x-8 space-y-32">
             <div className="relative">
               <div className="">
                 <img className="object-fill h-56 w-[19rem]" src={Serviceone} />
@@ -288,9 +288,23 @@ export default function Home() {
             </div>
         </div>
       </div>
-      <div className="container  mx-auto flex bg-orange-50">
-        <div>
-          <img src={icon} className="object-fill h-[32rem]"></img>
+      <div className="container  mx-auto flex flex-col sm:flex-row justify-start sm:bg-orange-50 mt-24">
+        <div  className="order-last sm:order-first">
+          <img src={icon} className="object-fill h-80 sm:h-[32rem]"></img>
+          <div className="flex  space-x-5 bg-white-600 card bg-red-600">
+              <div className="flex  space-x-5 p-2">
+                <img
+                  class="rounded-full w-[4rem] h-16 "
+                  src={austrailiaflag}
+                  alt="image description"
+                />
+
+                <span className="self-center text-white">Australia</span>
+              </div>
+              <div className="bg-blue-600 h-10 w-[4rem]  text-white flex justify-center items-center">
+                <ArrowForwardIcon></ArrowForwardIcon>
+              </div>
+            </div>
         </div>
         <div>
           <h1 className="text-red-600 text-2xl font-semibold">
@@ -299,7 +313,7 @@ export default function Home() {
           <span className="text-4xl  font-semibold">
             Immigration Choose Your Country
           </span>
-          <div className="grid grid-cols-2 gap-6 mt-8  w-[40rem]">
+          <div className="grid  hidden sm:block grid-cols-2 gap-6 mt-8  w-[40rem]">
             <div className="flex  space-x-5 bg-white-600 card ">
               <div className="flex  space-x-5 p-2">
                 <img
@@ -359,15 +373,15 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="sepecial h-96    flex flex-col justify-center items-center">
-        <h1 className="text-center text-white font-semibold">
+      <div className="sepecial h-96    flex flex-col justify-center items-center mt-80">
+        <h1 className="text-center sm:text-white font-semibold text-red-600">
           Special Care Services
         </h1>
-        <span className="text-center text-4xl text-white font-semibold">
+        <span className="text-center text-4xl sm:text-white font-semibold text-black">
           We Provide Special Care To Make Easy Your Dream
         </span>
 
-        <div className="flex space-x-8 mt-8">
+        <div className="flex space-x-8 mt-8 flex-col sm:flex-row">
           <div className="bg-red-600">
             <div>
               <img className="object-fill h-52 z-30 " src={imgone} />
@@ -397,52 +411,27 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto flex  space-x-32 mt-32">
+      <div className="container mx-auto flex  space-x-32 mt-96 flex-col sm:flex-row p-8">
         <div className="w-[40%]">
-          <span className="text-red-600 text-2xl font-bold">Why Choose Us</span>
-          <h1 className="text-5xl font-bold">
+          <span className="text-red-600 sm:text-2xl text-xl text-nowrap font-bold">Why Choose Us</span>
+          <h1 className="sm:text-5xl text-sm text-nowrap font-bold">
             Some Reasons People Like Our concultancy
           </h1>
-          <p className="mt-8">
+          <p className="mt-8 bg-red-600  text-justify w-80">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, animi
             blanditiis doloremque debitis, aliquid perspiciatis culpa ipsa minus
             totam alias eum reprehenderit voluptate cum, nam molestias
             reiciendis ducimus! Quas, saepe?
           </p>
-          <div className="flex flex-col  mt-6  space-y-8">
-            <div className="flex justify-center">
+          <div className="flex flex-col  m-6  space-y-8">
+            <div className="flex justify-center pl-32">
               <span className="text-center">
                 <img className="object-fill h-24 " src={whyusiconone} />
               </span>
-              <div className="flex flex-col m-4">
-                <span className="text-xl font-bold">
+              <div className="flex flex-col m-4 p">
+                <span className="text-xl font-bold bg-red-600 text-nowrap">
                   Direct Online Interview
                 </span>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                  mollitia inventore sit
-                </p>
-              </div>
-            </div>
-
-            <div className="flex ">
-              <span className="text-center">
-                <img className="object-fill h-24" src={whyusicontwo} />
-              </span>
-              <div className="flex flex-col m-4 ">
-                <span className="text-xl font-bold">Quick & Easy Process</span>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                  mollitia inventore sit
-                </p>
-              </div>
-            </div>
-            <div className="flex ">
-              <span className="text-center">
-                <img className="object-fill h-24" src={whyusicontwo} />
-              </span>
-              <div className="flex flex-col m-4">
-                <span className="text-xl font-bold">99% Visa Approvals</span>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
                   mollitia inventore sit

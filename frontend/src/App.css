@@ -102,16 +102,25 @@ margin-right: 5px;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 .sepecial{
-  background:red;
-    background: linear-gradient(rgba(4, 9, 30, 0.5), rgba(9, 12, 80, 0.9)),
-    url("./image/background.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-    background-position: center;
-    opacity:0.8;
-    z-index:2;
- 
-    padding:20rem;
+
 
 
 }
+@media only screen and (min-width:640px){
+  .sepecial{
+    background:red;
+    background: linear-gradient(rgba(4, 9, 30, 0.5), rgba(9, 12, 80, 0.9)),
+    url("./image/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity:0.8;
+    z-index:2;
+    padding:20rem;
+
+  }
+}
+
+ 
+
+
