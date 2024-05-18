@@ -1,0 +1,117 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+.dropdown-content{
+   display:none
+}
+.dropdown:hover .dropdown-content {
+  display:block;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.visatype{
+  background:url("./image/visatype.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position:center;
+}
+.blogbanner{
+  background:url("./image/vector/3434941.jpg");
+   background-repeat: no-repeat;
+  /* background-size:60% 90%; */
+    background-size:cover;
+  background-position:center;
+}
+.parent{
+  height:300px;
+  background-color:#FFFFFF;
+}
+
+.about_list{
+   list-style: none;
+
+ font-size: 1.5rem;
+}
+.about_list li::before{
+  content: '';
+display: inline-block;
+height: 20px;
+width: 20px;
+background-size: contain;
+background-image: url("./image/check.png");
+margin-right: 5px;
+}
+.serviceicon{
+    fontSize: '2rem' ;
+    color:blue
+}
+.offer{
+  background:rgba(0,0,0,.87);
+}
+.offercard{
+    box-shadow: 6px 6px #989898, 12px 12px #6c6666;
+}
+.second{
+ background:rgba(0,0,0,.87);
+}
+.cardone{
+    background:#1D1D1D;
+  box-shadow: 0 6px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+.card{
+    /* background:#E8EBE3; */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+.sepecial{
+  background:red;
+    background: linear-gradient(rgba(4, 9, 30, 0.5), rgba(9, 12, 80, 0.9)),
+    url("./image/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+    background-position: center;
+    opacity:0.8;
+    z-index:2;
+ 
+    padding:20rem;
+
+
+}
