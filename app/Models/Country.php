@@ -12,5 +12,10 @@ class Country extends Model
     use HasFactory;
     protected $guarded =[];
 
+    public function visaTypes()
+    {
+        return $this->belongsToMany(VisaType::class, 'visas');
+    }
+
   
 }

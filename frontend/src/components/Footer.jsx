@@ -1,10 +1,13 @@
 import React from 'react'
 import logo from "../image/logo.png";
 import { Link } from 'react-router-dom';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import InstagramIcon from '@mui/icons-material/Instagram';
 export default function Footer(props){
     return (
       <>
-        <div className={`bg-black p-8 text-white ${ props.css}`}>
+        <div className="bg-black p-8 text-white min-w">
           <div className="container mx-auto flex-col  space-y-8">
             <div className="flex justify-center  items-baseline space-x-10">
               <div className="flex space-x-52">
@@ -52,7 +55,8 @@ export default function Footer(props){
             </div>
 
             <div className="flex space-x-8 ">
-              <div className="flex flex-col space-y-4">
+              <div className='flex flex-col'>
+              <div className="flex flex-col space-y-4  w-full">
                 <span className="font-semibold text-xl">About Company</span>
                 <span>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -62,6 +66,54 @@ export default function Footer(props){
                   eius, similique quibusdam!
                 </span>
               </div>
+
+              <div className='flex  mt-10 space-x-8'>
+              <Link to="tel:+977982488696">
+              <div>
+                <div className='flex space-x-3'>
+                 <PhoneIcon  style={{ fontSize: "3rem" }}></PhoneIcon>
+
+                  <div className='flex flex-col'>
+                    
+                    <span>Make A Call</span>
+                    <span>9824888696</span>
+                  </div>
+                </div>
+              </div>
+              </Link>
+
+             <Link to="mailto:someone@example.com">
+              <div>
+                <div className='flex space-x-3'>
+                 <EmailIcon  style={{ fontSize: "3rem" }}></EmailIcon>
+
+                  <div className='flex flex-col'>
+                    
+                    <span>Email us</span>
+                    <span>EuroDream@gmail.com</span>
+                  </div>
+                </div>
+              </div>
+              </Link>
+
+      <Link to="https://www.instagram.com/?hl=en">
+              <div>
+                <div className='flex space-x-3'>
+                 <InstagramIcon  style={{ fontSize: "3rem" }}></InstagramIcon>
+
+                  <div className='flex flex-col'>
+                    
+                    <span>Contact us</span>
+                    <span>EuroDream@gmail.com</span>
+                  </div>
+                </div>
+              </div>
+              </Link>
+              </div>
+
+        
+              </div>
+              
 
               <div className="w-1/2 px-4 ">
                 <span>Quick Link</span>

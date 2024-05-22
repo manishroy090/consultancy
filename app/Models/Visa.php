@@ -10,10 +10,15 @@ class Visa extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    
-    public function visatype(){
-        return $this->belongsTo(VisaType::class);
+
+    public function visaTypes()
+    {
+        return $this->belongsToMany(VisaType::class)->withPivot('expiry_date');
     }
 
+    public function countries()
+    {
+        return $this->belongsToMany(Country::class,'countries')->withPivot('expiry_date');
+    }
    
 }

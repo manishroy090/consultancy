@@ -12,7 +12,7 @@ export default function index() {
   const [visatypelist,setVisaTypeList] = useState([]);
   const  [errorList, setErrorList] = useState({});
   const [editData, setEditData] = useState({});
-  const [isedit ,setIsEdit] = useState();
+  const [isedit ,setIsEdit] = useState(false);
   const {setNotification} = useStateContext();
 
   // 
@@ -40,7 +40,8 @@ export default function index() {
     // const data = new FormData(event.target);
   
     axiosClient.post('visatype/store',visatype).then((res)=>{
-         if(res.data.status===200){
+      console.log(res);
+         if(res.status===200){
            setNotification("Visatype created successfully",'');
            event.target.reset();
 
@@ -65,10 +66,10 @@ export default function index() {
    const update = (event)=>{
     event.preventDefault();
     axiosClient.post(`visatype/update/${visatype.id}`,visatype).then((res)=>{
-      if(res.data.status===200){
+      if(res.status===200){
+        setNotification("Visatype Updated successfully",'');
         event.target.reset();
         setIsEdit(false);
-        setNotification("Visatype Updated successfully",'');
 
        }
        else{
@@ -151,10 +152,6 @@ export default function index() {
                 </th>
 
                 <th scope="col" className="px-6 py-3">
-                  Country
-                </th>
-             
-                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -166,9 +163,7 @@ export default function index() {
                 </td>
             
                 <td className="px-6 py-4">{index+1}</td>
-                <td className="px-6 py-4">{item.visatype_id}</td>
-                <td className="px-6 py-4">{item.country_id}</td>
-
+                <td className="px-6 py-4">{item.name}</td>
                 <td className="px-6 py-4 flex space-x-8">
                   <Link
                     href="#"
@@ -244,28 +239,7 @@ export default function index() {
               <span className="text-red-600 self-center mt-2" id="name">{errorList ? errorList.name : ''}</span>
             </div>
 
-            <div className="mb-5 flex flex-col">
-              <label
-                htmlFor="countries"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Select an option
-              </label>
-              <select
-              value={visatype.country_id}
-                name="country_id"
-                onChange={handleOnChange}
-                id="countries"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option selected>Choose a country</option>
-                {countriesList.map((item,index)=>(
-                 <option value={item.id} key={index} >{item.name}</option>
-                ))}
-  
-              </select>
-              <span className="text-red-600 self-center mt-2">{errorList ? errorList.country_id : ''}</span>
-            </div>
+           
             <button
               id="submitbutton"
               type="submit"

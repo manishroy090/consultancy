@@ -9,7 +9,8 @@ const StateContext = createContext({
   setUser: () => { },
   setToken: () => { },
   setNotification: () => { },
-  textFilter: () => { }
+  textFilter: () => { },
+  getHeading:()=>{}
 })
 
 export const ContextProvider = ({ children }) => {
@@ -76,6 +77,23 @@ export const ContextProvider = ({ children }) => {
 
   }
 
+  const getHeading = (description,noElement)=>{
+
+    if(description){
+      const headingPattern = /<h[1-6][^>]*>.*?<\/h[1-6]>/gi;
+      const headings = description.match(headingPattern);
+      return headings.slice(0, noElement);
+    }
+    else{
+      return [];
+    }
+
+    
+   
+    
+
+  }
+
 
   return (
     <StateContext.Provider value={{
@@ -85,7 +103,8 @@ export const ContextProvider = ({ children }) => {
       setToken,
       notification,
       setNotification,
-      textFilter
+      textFilter,
+      getHeading
     }}>
       {children}
       <ToastContainer />

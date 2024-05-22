@@ -9,6 +9,7 @@ import Home from "./views/pages/Home";
 import Contact from "./views/pages/Contact";
 import Country from './views/admin/country/index';
 import Visatype from './views/admin/visatype/index';
+import Visa from './views/admin/visa/index';
 import  Offer from './views/admin/offer/Index';
 import Aboutus from './views/admin/about/Index';
 import Services from './views/admin/service/Index'
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
             },{
                 path:'visatype',
                 element:<Visatype/>
+            },
+            {
+                path:'visa',
+                element:<Visa/>
             },
             {
                 path:'offer',

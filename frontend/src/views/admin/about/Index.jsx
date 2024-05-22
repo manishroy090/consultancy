@@ -5,6 +5,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axiosClient from '../../../../axios_client';
 import AddIcon from '@mui/icons-material/Add';
 import { useStateContext } from '../../../context/ContextProvider';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+
+
 
 
 
@@ -14,6 +18,7 @@ export default function Index() {
     const [aboutuslist,setAboutuslist] = useState([]);
     const [errorList , setErrorList] = useState({});
     const navigate = useNavigate();
+    const [ckeditordata ,setCkeditorData] = useState();
     const {setNotification} = useStateContext();
 
     
@@ -38,7 +43,9 @@ export default function Index() {
   
     const handleOnSubmit = (event)=>{
       event.preventDefault();
-      axiosClient.post('aboutus/store',aboutus).then((response)=>{
+      const formData = new FormData(event.target);
+      formData.append('description',ckeditordata);
+      axiosClient.post('aboutus/store',formData).then((response)=>{
              if(response.data.status ==200){
               setNotification("About created successfully",'');
               event.target.reset();
@@ -48,6 +55,12 @@ export default function Index() {
              }
       });
     }
+
+    const handleCkeditorState = (event,editor)=>{
+      const data =editor.getData();
+      setCkeditorData(data);
+     
+   }
     
   
   
@@ -60,7 +73,9 @@ export default function Index() {
   
     const handleupdate = (event)=>{
        event.preventDefault();
-       axiosClient.post(`aboutus/update/${aboutus.id}`,aboutus);
+       const formData = new FormData(event.target);
+       formData.append('description',ckeditordata);
+       axiosClient.post(`aboutus/update/${aboutus.id}`,formData);
        setNotification("About update successfully",'');
        event.target.reset();
 
@@ -222,27 +237,21 @@ export default function Index() {
               {errorList.title}
               </span>
             </div>
-
             <div className="mb-5 flex flex-col">
-              <label
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                htmlFor="user_avatar"
-              >
-                Description
-              </label>
-         
-              <textarea
-              value={aboutus.description}
-              name="description"
-                onChange={handleOnChange}
-                type="text"
-                id="base-input"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-              <span className="text-red-600 self-center mt-2">
-              {errorList.description}
-              </span>
-            </div>
+        <label
+          htmlFor="base-input"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Description
+        </label>
+        <CKEditor
+         name="description"
+         editor={ClassicEditor}
+         onChange={(editor, data) => handleCkeditorState(editor, data)}
+       
+        />
+ <span className="text-red-600 self-center mt-2 " id="name">{errorList?.description? errorList.description : ''}</span>
+      </div>
             <button
               id="submitbutton"
               type="submit"

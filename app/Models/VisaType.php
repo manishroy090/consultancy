@@ -12,7 +12,10 @@ class VisaType extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function visa(){
-        return $this->hasMany(Visa::class,'visatype_id','id');
+
+    public function countries()
+    {
+        return $this->belongsToMany(Country::class, 'visas');
     }
+   
 }

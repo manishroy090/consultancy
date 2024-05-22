@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Country;
-use Illuminate\Support\Facades\Validator;
 use App\Models\VisaType;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Country;
+
 
 class VisatypeController extends Controller
 {
@@ -23,12 +24,10 @@ class VisatypeController extends Controller
  
         $validator = Validator::make($request->all(),[
             'name'=>"required",
-            'country_id'=>"Required"
 
         ],[
             
             'name'=>"Name is required",
-            'country_id'=>"Select Country"
         ]);
 
         if($validator->fails()){
@@ -58,12 +57,10 @@ class VisatypeController extends Controller
 
         $validator = Validator::make($request->all(),[
             'name'=>"required",
-            'country_id'=>"Required"
 
         ],[
             
             'name'=>"Name is required",
-            'country_id'=>"Select Country"
         ]);
 
 

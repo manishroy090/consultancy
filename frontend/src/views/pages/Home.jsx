@@ -61,7 +61,10 @@ export default function Home() {
   const [aboutus ,setAboutus] = useState({});
   const [patners ,setPatners] = useState([]);
   const [aboutusdetails ,setAboutusDetails] = useState([]);
-  const {textFilter} = useStateContext();
+  const {textFilter,getHeading} = useStateContext();
+  const [services,setServices] = useState([]);
+  const [specialservices,setSpecialServices]= useState([]);
+  const [whyus, setWhyus] = useState({});
 
 
      const settings = {
@@ -73,11 +76,26 @@ export default function Home() {
        autoplaySpeed: 2000,
        autoplay: true,
        focusOnSelect: true,
+       responsive: [
+       
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            initialSlide: 2
+          }
+        },
+       
+      ]
      };
 
+
+ 
+
      const fetchData = async ()=>{
-      const res = await axiosClient.get('frontend/home')
-      const  {teammembers,blogs,testimonials,offers,aboutus,aboutdetails,patners} = res.data;
+      const res = await axiosClient.get('frontend/home');
+      const  {teammembers,blogs,testimonials,offers,aboutus,aboutdetails,patners,services,specialservices,whyus} = res.data;
       setAboutusDetails(aboutdetails);
       setOffers(offers);
       setBlogs(blogs);
@@ -85,7 +103,9 @@ export default function Home() {
       setTestimonials(testimonials);
       setTeammembers(teammembers);
       setAboutus(aboutus);
-    
+      setServices(services);
+      setSpecialServices(specialservices);
+      setWhyus(whyus)
   }
     
     useEffect(()=>{
@@ -146,7 +166,7 @@ export default function Home() {
         </div>
         {/* <img src={iconfive} className="object-fill "></img> */}
       </div>
-      <div className="container relative mx-auto sm:p-32  p-8   flex sm:flex-row flex-col sm:space-x-60 bg-red-600">
+      <div className="container relative mx-auto sm:p-32  p-8   flex sm:flex-row flex-col sm:space-x-60 ">
         <div className="order-last sm:order-first">
           <div className="">
             <img className="object-fill sm:h-96 sm:w-[72rem] h-72  w-60" src={aboutimgone} />
@@ -173,10 +193,10 @@ export default function Home() {
             <div className="flex  space-x-10">
               <div className="parent flex flex-col space-y-10">
                 <ul className="about_list text-nowrap">
-                  {aboutusdetails.map((item)=>(
-
-                  <li>{item.title}</li>
-                  ))}
+                {aboutus && aboutus.description && getHeading(aboutus.description,8).map((item,index)=>(
+              <li> {textFilter(item)}</li>
+                ))}
+         
                 </ul>
                 <button className="self-start bg-red-600 p-4 text-white  ">
                   Learn More
@@ -197,7 +217,7 @@ export default function Home() {
           </div>
         </div>
       </div>{" "}
-      <div className="container mx-auto text-center relative sm:p-28  p-8 bg-blue-600">
+      <div className="container mx-auto text-center relative sm:p-28  p-8 ">
         <h1 className="text-red-600 text-2xl font-semibold text-nowrap">
           Service We provide
         </h1>
@@ -205,93 +225,32 @@ export default function Home() {
         <span className="sm:text-3xl text-xs mt-4 font-semibold text-nowrap">
           Explore Our Visa Citizenship & Immigration Service
         </span>
-        <div className=" flex flex-col sm:flex-row  sm:space-x-8 space-y-32">
+        <div className=" flex flex-col sm:flex-row  sm:space-x-8 sm:space-y-0 space-y-32 sm:mt-8">
+        {services.map((item,index)=>(
             <div className="relative">
               <div className="">
-                <img className="object-fill h-56 w-[19rem]" src={Serviceone} />
+                <img className="object-fill h-56 w-[19rem]" src={`http://localhost:8000/image/service/${item.image}`} />
               </div>
               <div className="flex flex-col -translate-y-20 translate-x-3 top-[9rem] left-[1rem]">
                 <div className="bg-red-600 w-24 p-4 text-center">
-                  <FlightTakeoffIcon
-                    variant="contained"
-                    className="text-white "
-                    style={{ fontSize: "3rem" }}
-                  ></FlightTakeoffIcon>
+                <img className="object-fill" src={`http://localhost:8000/image/service/${item.icon }`} />
                 </div>
                 <div className="bg-white card w-[17rem] p-4  text-center">
-                  <span className="font-bold ">Student Visa</span>
+                  <span className="font-bold ">{item.title}</span>
                   <p>
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                   </p>
                 </div>
               </div>
-            </div>
-            <div className="relative">
-              <div className="">
-                <img className="object-fill h-56 w-[19rem]" src={Servicetwo} />
-              </div>
-              <div className="flex flex-col absolute top-[9rem] left-[1rem]">
-                <div className="bg-red-600 w-24 p-4 text-center">
-                  <EngineeringIcon
-                    className="text-white"
-                    style={{ fontSize: "3rem" }}
-                  ></EngineeringIcon>
-                </div>
-                <div className="bg-white card w-[17rem] p-4  text-center">
-                  <span className="font-bold ">Business Visa</span>
-                  <p>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="">
-                <img
-                  className="object-fill h-56 w-[19rem]"
-                  src={Servicethree}
-                />
-              </div>
-              <div className="flex flex-col absolute top-[9rem] left-[1rem]">
-                <div className="bg-red-600 w-24 p-4 text-center">
-                  <BusinessCenterIcon
-                    className="text-white"
-                    style={{ fontSize: "3rem" }}
-                  ></BusinessCenterIcon>
-                </div>
-                <div className="bg-white card w-[17rem] p-4  text-center">
-                  <span className="font-bold ">Worker Visa</span>
-                  <p>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="">
-                <img className="object-fill h-56 w-[19rem]" src={Servicefour} />
-              </div>
-              <div className="flex flex-col absolute top-[9rem] left-[1rem]">
-                <div className="bg-red-600 w-24 p-4 text-center">
-                  <FlightTakeoffIcon
-                    className="text-white"
-                    style={{ fontSize: "3rem" }}
-                  ></FlightTakeoffIcon>
-                </div>
-                <div className="bg-white card w-[17rem] p-4  text-center">
-                  <span className="font-bold ">Tourist Visa</span>
-                  <p>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  </p>
-                </div>
-              </div>
-            </div>
+            </div> 
+          ))}
+         
         </div>
       </div>
-      <div className="container  mx-auto flex flex-col sm:flex-row justify-start sm:bg-orange-50 mt-24">
+      <div className="container  mx-auto flex flex-col sm:flex-row justify-start sm:bg-orange-50 mt-24 sm:mt-0">
         <div  className="order-last sm:order-first">
           <img src={icon} className="object-fill h-80 sm:h-[32rem]"></img>
-          <div className="flex  space-x-5 bg-white-600 card bg-red-600">
+          <div className="flex sm:hidden space-x-5 bg-white-600 card bg-red-600">
               <div className="flex  space-x-5 p-2">
                 <img
                   class="rounded-full w-[4rem] h-16 "
@@ -313,7 +272,7 @@ export default function Home() {
           <span className="text-4xl  font-semibold">
             Immigration Choose Your Country
           </span>
-          <div className="grid  hidden sm:block grid-cols-2 gap-6 mt-8  w-[40rem]">
+          <div className="sm:grid hidden   grid-cols-2 gap-6 mt-8  w-[40rem]">
             <div className="flex  space-x-5 bg-white-600 card ">
               <div className="flex  space-x-5 p-2">
                 <img
@@ -328,7 +287,7 @@ export default function Home() {
                 <ArrowForwardIcon></ArrowForwardIcon>
               </div>
             </div>
-            <div className="flex  space-x-5 bg-white-600 card ">
+            <div className="flex flex-row space-x-5 bg-white-600 card ">
               <div className="flex  space-x-5 p-2">
                 <img
                   class="rounded-full w-[4rem] h-16 "
@@ -373,7 +332,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="sepecial h-96    flex flex-col justify-center items-center mt-80">
+      <div className="sepecial h-96    flex flex-col justify-center items-center mt-80 sm:mt-8">
         <h1 className="text-center sm:text-white font-semibold text-red-600">
           Special Care Services
         </h1>
@@ -381,77 +340,57 @@ export default function Home() {
           We Provide Special Care To Make Easy Your Dream
         </span>
 
-        <div className="flex space-x-8 mt-8 flex-col sm:flex-row">
-          <div className="bg-red-600">
+     
+
+        <div className="flex sm:space-x-8 mt-8 space-y-9 sm:space-y-0 flex-col sm:flex-row">
+
+        {specialservices.map((item,index)=>(
+          <div className="">
             <div>
-              <img className="object-fill h-52 z-30 " src={imgone} />
+              <img className="object-fill h-52 z-30 w-full " src={`http://localhost:8000/image/service/${item.image}`} />
             </div>
             <div className="bg-red-600 text-white text-center p-4 flex justify-between text-xl font-semibold">
-              IELTS Course
+               {item.title}
               <ArrowForwardIcon></ArrowForwardIcon>
             </div>
           </div>
-          <div className="bg-red-600">
-            <div>
-              <img className="object-fill h-52 z-30 " src={imgtwo} />
-            </div>
-            <div className="bg-red-600 text-white text-center p-4 flex justify-between text-xl font-semibold">
-              IELTS Course
-              <ArrowForwardIcon></ArrowForwardIcon>
-            </div>
-          </div>
-          <div className="bg-red-600">
-            <div>
-              <img className="object-fill h-52 z-30 " src={imgthree} />
-            </div>
-            <div className="bg-red-600 text-white text-center p-4 flex justify-between text-xl font-semibold">
-              IELTS Course
-              <ArrowForwardIcon></ArrowForwardIcon>
-            </div>
-          </div>
+               ))}
         </div>
+   
       </div>
-      <div className="container mx-auto flex  space-x-32 mt-96 flex-col sm:flex-row p-8">
+      <div className="container mx-auto flex  sm:space-x-32 mt-96 sm:mt-32 flex-col sm:flex-row p-8 sm:p-0">
+ 
+
+      
         <div className="w-[40%]">
           <span className="text-red-600 sm:text-2xl text-xl text-nowrap font-bold">Why Choose Us</span>
-          <h1 className="sm:text-5xl text-sm text-nowrap font-bold">
-            Some Reasons People Like Our concultancy
+          <h1 className="sm:text-5xl text-sm text-nowrap sm:text-wrap font-bold">
+          {whyus.title}
           </h1>
-          <p className="mt-8 bg-red-600  text-justify w-80">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, animi
-            blanditiis doloremque debitis, aliquid perspiciatis culpa ipsa minus
-            totam alias eum reprehenderit voluptate cum, nam molestias
-            reiciendis ducimus! Quas, saepe?
-          </p>
+         
+          {textFilter(whyus.description,277)}
           <div className="flex flex-col  m-6  space-y-8">
-            <div className="flex justify-center pl-32">
-              <span className="text-center">
-                <img className="object-fill h-24 " src={whyusiconone} />
-              </span>
-              <div className="flex flex-col m-4 p">
-                <span className="text-xl font-bold bg-red-600 text-nowrap">
-                  Direct Online Interview
-                </span>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                  mollitia inventore sit
-                </p>
-              </div>
-            </div>
+          <ul className="about_list">
+          {whyus && whyus.description && getHeading(whyus.description,8).map((item,index)=>(
+              <li> {textFilter(item)}</li>
+                ))}
+                 </ul>
           </div>
+   
         </div>
-        <div className=" flex  w-2/4 0 p-2 flex-wrap relative">
-          <div className="w-1/2">
-            <img className="object-fill h-96 w-[18rem]" src={whyusne} />
+           
+        <div className=" flex flex-col w-96 sm:w-2/4 0 sm:p-2 flex-wrap relative">
+          <div className="sm:w-1/2 w-72 ">
+            <img className="object-fill sm:h-96 h-52 w-40 sm:w-[18rem]" src={whyusne} />
           </div>
-          <div className="w-1/2 absolute top-10 left-[19.5rem]">
-            <img className="object-fill h-[18rem] w-[57rem]" src={whyustwo} />
+          <div className="sm:w-1/2 absolute sm:top-10 sm:left-[19.5rem] left-44 top-6">
+            <img className="object-fill sm:h-[18rem] sm:w-[57rem] h-40 w-36" src={whyustwo} />
           </div>
 
-          <div className="w-2/4 absolute left-[19.5rem] top-[22rem]">
-            <img className="object-fill h-96 w-[57rem]" src={whyusthree} />
-            <div className="w-full bg-red-600 h-48 absolute top-[4rem] right-[17rem] p-8 text-white">
-              <span className="text-xl font-bold">10m + Trusted customer</span>
+          <div className="sm:w-2/4 absolute sm:left-[19.5rem] sm:top-[22rem] top-48 left-44">
+            <img className="object-fill sm:h-96 sm:w-[57rem] h-52 w-36" src={whyusthree} />
+            <div className="sm:w-full bg-red-600 sm:h-48 h-32 absolute sm:top-[4rem] top-8 right-32 sm:right-[17rem] sm:p-8 p-4 text-white">
+              <span className="sm:text-xl text-sm font-bold text-nowrap">10m + Trusted customer</span>
               <div class="mt-3 flex -space-x-2 overflow-hidden">
                 <img
                   class="inline-block h-12 w-12 rounded-full ring-2 ring-white"
@@ -483,19 +422,19 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container text-center items-center mx-auto mt-32">
+      <div className="container text-center items-center mx-auto mt-96">
         <h1 className="text-red-600 text-xl font-semibold">Team Member</h1>
-        <span className="text-4xl font-semibold  ">
+        <span className="sm:text-4xl font-semibold  ">
           Meet Our Experience Visa Consultant
         </span>
         <div className="mt-16   space-x-6">
           <Slider {...settings}>
             {teammembers.map((item,index)=>(
        
-        <div className=" rounded-tl-md rounded-br-md  relative">
+        <div className=" rounded-tl-md rounded-br-md  relative ">
          
-          <img className="object-cover h-72 w-96" src={`http://localhost:8000/image/teammember/${item.image}`} />
-          <div className="absolute p-4 text-black bottom-1  font-semibold  backdrop-opacity-10 backdrop-invert bg-white/30  w-96 flex flex-col">
+          <img className="object-fit  h-72 sm:w-96 " src={`http://localhost:8000/image/teammember/${item.image}`} />
+          <div className="absolute sm:p-4 text-black bottom-1  font-semibold  backdrop-opacity-10 backdrop-invert  w-96 flex flex-col">
           <span className="first-letter:text-3xl">{item.title}</span>
           <span className="">{item.designation}</span>
           </div>
@@ -507,29 +446,32 @@ export default function Home() {
       
         </div>
       </div>
-      <div className="flex   mt-20 ">
-        <div className=" flex flex-col space-y-6 items-center  w-fit">
-          <h1 className="text-xl text-red-600 font-semibold self-start ml-48 pl-1">
-            Your Favorite's Destination
+      <div className="flex  mt-20 w-full">
+        <div className="p-20 flex-col space-y-6  items-center  hidden sm:flex w-2/5">
+          <h1 className="text-4xl  font-semibold self-start text-red-600 ">
+            Contact Us
           </h1>
-          <span className="text-4xl font-semibold w-1/2">
-            Skilled Visa's In Global Immigration Summit
+          <span className="text-3xl font-semibold self-start ">
+          Call Eurodream Today to Schedule Your Consultation
           </span>
-          <span className="w-1/2">
-            These Cases are perfectly Simple and easy to distinguish. In a free
-            hour, when our power of choice is untrammelled
+          <span className="text-wrap w-1/2  self-start w-full">
+          Our team is here to make the process simple and straightforward for you.
+           Whether you're exploring work opportunities abroad or planning your study journey overseas, 
+           we're dedicated to guiding you through every step of the way.
+            Contact us now to schedule your appointment and unlock a world of possibilities.
           </span>
-          <ul className="about_list self-start ml-48 ">
-            <li>Faster & Reliable Execution</li>
-            <li>Accurate & Expert Advice</li>
+          <ul className="about_list self-start ">
+            <li>Phone: +1 (123) 456-7890 </li>
+            <li>Email: info@eurodream.com</li>
+            <li>Address: 1234 Dream Street, Eurocity, EU</li>
           </ul>
-          <button className="bg-red-600 text-white p-5 mt-4 self-start ml-48">
-            Get Free Consulting{" "}
+          <button className="bg-red-600 text-white p-5 mt-4 self-start ">
+            Get Free Consulting
             <KeyboardArrowRightIcon></KeyboardArrowRightIcon>
           </button>
         </div>
-        <div className="flex">
-          <form className=" p-10 card w-fit">
+        <div className="flex w-3/5">
+          <form className=" p-8 card">
             <h1 className="text-red-600">Team Member</h1>
             <span className="text-4xl font-semibold">
               Fell Free to Contact Us
@@ -542,15 +484,15 @@ export default function Home() {
 
               <input type="text" className="border-none absolute "></input>
             </div>
-            <div className="flex space-x-4">
-              <div className="flex flex-col  p-1  mt-8 w-80 border rounded border-red-600 static z-10">
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              <div className="flex flex-col  p-1  mt-8 sm:w-80 w-full border rounded border-red-600 static z-10">
                 <div className=" bg-white p-2  w-fit bottom-7 left-8  z-20 relative">
                   <h1 className=" text-xl font-semibold  ">Phone</h1>
                 </div>
 
                 <input type="text" className="border-none absolute"></input>
               </div>
-              <div className="flex flex-col  p-1 mt-8 w-80 border rounded border-red-600 static z-10">
+              <div className="flex flex-col  p-1 mt-8 sm:w-80 w-full border rounded border-red-600 static z-10">
                 <div className=" bg-white p-2  w-fit bottom-7 left-8 relative z-20">
                   <h1 className=" text-xl font-semibold   ">Email</h1>
                 </div>
@@ -580,10 +522,10 @@ export default function Home() {
       </div>
       <div className="container flex flex-col items-center mx-auto mt-32 space-y-8">
         <h1 className="text-red-600 text-xl font-bold">Working Process</h1>
-        <span className="w-96 text-4xl font-bold">
+        <span className="sm:w-96 sm:text-4xl font-bold">
           3 Step Follow You Can Get Your visa Easily
         </span>
-        <div className="flex space-x-10">
+        <div className="flex flex-col sm:flex-row sm:space-x-10 space-y-10">
           <div className="flex flex-col items-center bg-white card p-4">
             <span className="text-red-600 font-bold">Step o1</span>
             <span className="w-96 text-2xl font-bold">
@@ -622,26 +564,24 @@ export default function Home() {
           <span className="text-red-600 text-2xl font-semibold">
             Our Testimonials
           </span>
-          <span className=" text-4xl font-semibold">
+          <span className="sm:text-4xl font-semibold">
             Let's Explore Why People Say About Our Services
           </span>
           {testimonials.length>0 ?  (
              testimonials.map((item,index)=>(
-
-         
-              <div className="flex space-x-16 mt-8">
+              <div className="flex flex-col sm:space-x-16 space-y-96  sm:space-y-0 mt-8">
                 <div className="">
                   <img
                     src={testimonialiconthree}
-                    className="object-fill absolute h-[32rem] z-40 left-60 top-[6rem]"
+                    className="object-fill absolute sm:h-[32rem] w-52 sm:w-auto z-40 sm:left-60 sm:top-[6rem] left-24"
                   ></img>
-                  <div className="bg-orange-100 h-80 w-96 absolute left-60 top-72 z-30"></div>
+                  <div className="bg-orange-100 sm:h-80 sm:w-96 w-52 h-32 absolute sm:left-60 sm:top-72 left-24 top-60 z-30"></div>
                   <img
                     src={testimonialiconfive}
-                    className="object-fill absolute h-[14rem] z-40 left-[6rem] top-[27rem]"
+                    className="object-fill absolute h-[14rem] z-40 sm:left-[6rem] sm:top-[27rem] left-1 top-52"
                   ></img>
                 </div>
-                <div className="   w-[40rem] p-4 card">
+                <div className="sm:w-[40rem] w-96 p-4 card">
                   <img src={testimonialiconfour} className="object-fill h-8"></img>
                   <p className="test-wrap m-4">
                    {item.description}
@@ -666,17 +606,19 @@ export default function Home() {
           )}
          
         </div>
-        <img src={testimonialicontwo} className="absolute bottom-[1rem]"></img>
+        <img src={testimonialicontwo} className="absolute sm:bottom-[1rem] bottom-72 left-72"></img>
       </div>
       <div className="container text-center space-y-10 items-center mx-auto mt-72 mb-44 ">
         <h1 className="font-bold text-red-600 text-xl">News & Blog</h1>
-        <span className="text-3xl font-bold ">Read Our Latest News & Blog</span>
+        <span className="sm:text-3xl font-bold text-nowrap ">Read Our Latest News & Blog</span>
       {blogs.length>0 ? (
          <div className="">
+          
+          
          <Slider {...settings}>
         {blogs.map((item,index)=>(
         
-           <div key={index} className="relative">
+           <div key={index} className="relative ml-8 sm:ml-0">
              <div className="w-20 absolute left-[15rem] flex flex-col text-center card">
                <span className="bg-red-600 font-bold text-xl p-2 text-white ">
                  26
@@ -728,14 +670,16 @@ export default function Home() {
           <hr class="h-1 w-96 my-8 bg-red-600"></hr>
         </div>
         <div className="flex space-x-16 p-8">
-          <div className="flex space-x-11">
+          <div className="flex flex-col sm:flex-row  space-y-8 sm:space-y-0 sm:space-x-11">
             {patners.map((item,index)=>(
+
 
         
             <img
               className="object-fill h-[6rem] w-[12rem]"
               src={`http://localhost:8000/image/patner/${item.image}`}
             />
+
           ))}
           </div>
         </div>

@@ -4,6 +4,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axiosClient from '../../../../axios_client';
 import { useStateContext } from '../../../context/ContextProvider';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
 export default function index() {
@@ -12,6 +14,8 @@ export default function index() {
   const [aboutuslist,setAboutuslist] = useState([]);
   const [errorList , setErrorList] = useState({});
   const {setNotification} = useStateContext();
+  const [ckeditordata ,setCkeditorData] = useState();
+
 
   
 
@@ -29,13 +33,21 @@ export default function index() {
 
   }
 
+  const handleCkeditorState = (event,editor)=>{
+    const data =editor.getData();
+    setCkeditorData(data);
+   
+ }
+
   useEffect(()=>{
     fetchData();
   },[]);
 
   const handleOnSubmit = (event)=>{
     event.preventDefault();
-    axiosClient.post('whyus/store',aboutus).then((response)=>{
+    const formData = new FormData(event.target);
+    formData.append('description',ckeditordata)
+    axiosClient.post('whyus/store',formData).then((response)=>{
            if(response.data.status ==200){
             setNotification("Whyus create successfully",'');
 
@@ -57,7 +69,9 @@ export default function index() {
 
   const handleupdate = (event)=>{
      event.preventDefault();
-     axiosClient.post(`whyus/update/${aboutus.id}`,aboutus);
+     const formData = new FormData(event.target);
+     formData.append('description',ckeditordata)
+     axiosClient.post(`whyus/update/${aboutus.id}`,formData);
      setNotification("Whyus update successfully",'');
 
   }
@@ -208,14 +222,11 @@ export default function index() {
             Description
           </label>
      
-          <textarea
-          value={aboutus.description}
-          name="description"
-            onChange={handleOnChange}
-            type="text"
-            id="base-input"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
+          <CKEditor
+         name="description"
+         editor={ClassicEditor}
+         onChange={(editor, data) => handleCkeditorState(editor, data)}
+        />
           <span className="text-red-600 self-center mt-2">
           {errorList.description}
           </span>

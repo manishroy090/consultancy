@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\VisatypeController;
 use App\Http\Controllers\Api\VisaController;
 use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\AboutusController;
@@ -51,8 +52,20 @@ Route::group(['middleware' => "api"],function(){
 
 });
 
-Route::controller(VisaController::class)->group(function(){
+
+Route::controller(VisatypeController::class)->group(function(){
     Route::group(['prefix'=>"visatype", 'as'=>'visatype.'],function(){
+        Route::get('/index','index');
+        Route::post('/store','store');
+        Route::get('edit/{id}','edit');
+        Route::post('update/{id}','update');
+        Route::get('delete/{id}','delete');
+    });
+  
+});
+
+Route::controller(VisaController::class)->group(function(){
+    Route::group(['prefix'=>"visa", 'as'=>'visa.'],function(){
         Route::get('/index','index');
         Route::post('/store','store');
         Route::get('edit/{id}','edit');

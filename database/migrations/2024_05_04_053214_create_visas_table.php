@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('visas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('visatype_id');
+            $table->foreignId('visa_type_id');
             $table->foreignId('country_id');
             $table->timestamps();
         });

@@ -13,15 +13,14 @@ class ServicesController extends Controller
         return Services::all();
     }
     public function store(Request $request){
-
       $validator =  Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
-            'icon'=>'required',
-            'image'=>'required'
+            'icon'=>'nullable',
+            'image'=>'required',
+            'specialoffer'=>'nullable'
         ],[
             'title.required'=>"Title is required",
-            'icon.required'=>"Icon is required",
             'image.required'=>"Image is required",
             'description.required'=>"Description is required",
         ]);
@@ -60,6 +59,7 @@ class ServicesController extends Controller
         $validator =  Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
+            'specialoffer'=>'nullable'
         ],[
             'title.required'=>"Title is required",
             'description.required'=>"Description is required",

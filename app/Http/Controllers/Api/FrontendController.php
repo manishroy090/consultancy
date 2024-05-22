@@ -15,6 +15,8 @@ use App\Models\Teammember;
 use App\Models\Aboutus;
 use App\Models\AboutDetails;
 use App\Models\Patner;
+use App\Models\Services;
+use App\Models\Whyus;
 
 class FrontendController extends Controller
 {
@@ -23,14 +25,17 @@ class FrontendController extends Controller
     public function home(){
      $about=Aboutus::first();
      return response()->json([
-       'visatypes'=>VisaType::has('visa')->get(),
+       'visatypes'=>VisaType::with('countries')->get(),
        'offers'=>Offer::all(),
        'blogs'=>NewsBlog::all(),
        'testimonials'=>Testimonials::all(),
        'teammembers'=> Teammember::all(),
        'aboutus'=>$about,
        'aboutdetails'=>AboutDetails::where('about_id',$about->id)->get(),
-       'patners'=>Patner::all()
+       'patners'=>Patner::all(),
+       'services'=>Services::where('specialoffer',null)->get(),
+       'specialservices'=>Services::where('specialoffer',1)->get(),
+       'whyus'=>Whyus::first()
      ]);
     }
 

@@ -82,6 +82,16 @@ export default function GuestLayout() {
                  
                 </Link>
               </li>
+
+              <li>
+                <Link to="/dashboard/visa" className='flex items-center p-2 text-white rounded-lg hover:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group'>
+                
+                 <FlightTakeoffIcon></FlightTakeoffIcon>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Visa</span>
+                 
+                </Link>
+              </li>
+
               <li>
                 <Link to="/dashboard/offer" className='flex items-center p-2 text-white rounded-lg hover:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group'>
                  

@@ -7,29 +7,32 @@ use Illuminate\Http\Request;
 use App\Models\Country;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Visa;
+use App\Models\VisaType;
 
 
 class VisaController extends Controller
 {
     public function index (){
         $countries = Country::all();
-        $visaTypes = Visa::all();
+        $visa = Visa::all();
         return  response()->json([
             'countries'=>$countries,
-            'visaTypes'=>$visaTypes
+            'visa'=>$visa,
+            'visaType'=>VisaType::all()
         ]);
     }
 
     public function store(Request $request){
+
+      
  
         $validator = Validator::make($request->all(),[
-            'name'=>"required",
-            'country_id'=>"Required"
+            'visa_id'=>"required",
+            'country_id'=>"required"
 
         ],[
-            
-            'name'=>"Name is required",
-            'country_id'=>"Select Country"
+            'visa_id'=>"Visa is required",
+            'country_id'=>"Country is required"
         ]);
 
         if($validator->fails()){
@@ -58,13 +61,12 @@ class VisaController extends Controller
     public function update(Request $request,$id){
 
         $validator = Validator::make($request->all(),[
-            'name'=>"required",
-            'country_id'=>"Required"
+            'visa_id'=>"required",
+            'country_id'=>"required"
 
         ],[
-            
-            'name'=>"Name is required",
-            'country_id'=>"Select Country"
+            'visa_id'=>"Visa is required",
+            'country_id'=>"Country is required"
         ]);
 
 
