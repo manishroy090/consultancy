@@ -19,8 +19,8 @@ class WhyusController extends Controller
             'title'=>'required',
             'description'=>"required"
         ],[
-            'title'=>"Title is required",
-            'description'=>"Description is required"
+            'title.required'=>"Title is required",
+            'description.required'=>"Description is required"
         ]);
 
         if($validator->fails()){
@@ -33,7 +33,7 @@ class WhyusController extends Controller
             Whyus::create($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Created Successfully"
+                'message'=>"Whyus Created successfully"
 
             ]);
         }
@@ -51,8 +51,8 @@ class WhyusController extends Controller
             'title'=>'required',
             'description'=>"required"
         ],[
-            'title'=>"Title is required",
-            'description'=>"Description is required"
+            'title.required'=>"Title is required",
+            'description,required'=>"Description is required"
         ]);
 
         if($validator->fails()){
@@ -65,7 +65,7 @@ class WhyusController extends Controller
             Whyus::where('id',$id)->update($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Update Successfully"
+                'message'=>"Whyus updated successfully"
 
             ]);
         }
@@ -77,7 +77,7 @@ class WhyusController extends Controller
 
         Whyus::where('id',$id)->delete();
         return  response()->json([
-           'message'=>"About us Deleted"
+           'message'=>"Whyus deleted Successfully"
         ]);
 
     }

@@ -7,16 +7,10 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useStateContext } from '../../../context/ContextProvider';
 
-
 export default function Index() {
-  const [offer,setOffer] = useState({});
-  const [errors,setErrorList] = useState({});
   const [offerlist, setOfferList] = useState([]);
-  const [ckeditordata ,setCkeditorData] = useState();
-  const [isedit ,setEdit] = useState(false);
+  const [counter,setCounter] = useState(0);
   const {setNotification} = useStateContext();
-
-
 
   const fetchData = async ()=>{
     try {
@@ -32,78 +26,17 @@ export default function Index() {
     fetchData();
  
 
-   },[])
-
-
-  const handleOnChange = (event)=>{
-    setOffer((offer)=>({
-        ...offer,
-        [event.target.name]:event.target.value
-    }))
-
-  }
-
-  const handleCkeditorState = (event,editor)=>{
-     const data =editor.getData();
-     setCkeditorData(data);
-    
-  }
-
-
-  const handleSubmit = (event)=>{
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    formData.append('description',ckeditordata);
-    axiosClient.post('offer/store',formData).then((res)=>{
-      if(res.status===200){
-        setNotification("Offer created successfully",'');
-        event.target.reset();
-
-      }else{
-        setErrorList(res.data.errors);
-      }
-
-    });
-
-
-  }
-
-
-  const handleEdit = (id)=>{
-    
-    axiosClient.get(`offer/edit/${id}`).then((response)=>{
-      setOffer(response.data);
-      setEdit(true);
-    });
-    document.getElementById('heading').innerText="Edit";
-    document.getElementById('submitbtn').innerHTML="Update";
-
-  }
-
-  const handleUpdate = (event)=>{
-      event.preventDefault();
-          const formData = new FormData(event.target);
-          formData.append('description',ckeditordata);
-          axiosClient.post(`offer/update/${offer.id}`,formData).then((response)=>{
-          if(response.status===200){
-            event.target.reset();
-            setNotification("Offer created Update",'');
-
-          }else{
-            setErrorList(response.data.errors);
-          }
-          
-        })
-
-
-
-  }
+   },[counter])
 
 
   const handleDelete = (id)=>{
-    axiosClient.get(`offer/delete/${id}`).then((resonse)=>{
-      setNotification("Country delete successfully",'delete');
 
+    axiosClient.get(`offer/delete/${id}`).then((resonse)=>{
+      setNotification(resonse.data.message,'delete');
+      setCounter(counter+1);
+
+    }).catch(()=>{
+      setNotification("something Went Wrong",'delete');
     })
   }
   return (
@@ -140,6 +73,9 @@ export default function Index() {
             />
           </div>
         </div>
+        <Link to='create'>
+        <span className='bg-blue-600 h-full p-3 text-white fontstyle font-semibold rounded-md fontstyle text-sm'>Add offer</span>
+          </Link>
       </div>
       <table className="w-full text-sm text-left rtl:text-right text-gray-500  ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -185,19 +121,20 @@ export default function Index() {
 
             <td className="px-6 py-4 flex space-x-8">
               <Link
-                href="#"
+                to={`edit/${item.id}`}
                 className="font-medium text-blue-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
               >
                 <EditIcon
-                 onClick={handleEdit.bind(this, item.id)}
+           
                 ></EditIcon>
               </Link>
               <Link
+                onClick={handleDelete.bind(this, item.id)}
                 href="#"
                 className="font-medium text-red-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
               >
                 <DeleteIcon
-               onClick={handleDelete.bind(this, item.id)}
+             
                 ></DeleteIcon>
               </Link>
             </td>
@@ -210,74 +147,7 @@ export default function Index() {
 
     </div>
     <div>
-    <form className=" ml-8 mx-auto shadow-xl p-8" onSubmit={isedit ? handleUpdate : handleSubmit}>
-      <h4 id='heading' className="text-2xl font-bold dark:text-white">Create</h4>
-
-      <div className="mb-5 flex flex-col  ">
-        <label
-          htmlFor="large-input"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Title
-        </label>
-        <input
-        value={offer.title || ''}
-        name="title"
-        onChange={handleOnChange}
-        type="text"
-        id="large-input"
-        className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      <span className="text-red-600 self-center mt-2 " id="name">{errors?.title ? errors.title : ''}</span>
-      </div>
-      <div className="mb-5 flex flex-col">
-        <label
-          htmlFor="base-input"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Description
-        </label>
-        <CKEditor
-         name="description"
-         editor={ClassicEditor}
-         onChange={(editor, data) => handleCkeditorState(editor, data)}
-       
-        />
-       
-               <span className="text-red-600 self-center mt-2 " id="name">{errors?.description? errors.description : ''}</span>
-      </div>
-      <div className="mb-5 flex flex-col">
-        <label
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          htmlFor="user_avatar"
-        >
-          Icon
-        </label>
-        <input
-          name="icon"
-          onChange={handleOnChange}
-          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          aria-describedby="user_avatar_help"
-          id="user_avatar"
-          type="file"
-        />
-               <span className="text-red-600 self-center mt-2 " id="name">{errors?.icon ? errors.icon : ''}</span>
-      </div>
-      <button
-        type="submit"
-         id='submitbtn'
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >
-        Submit
-      </button>
-      <button
-      id=''
-          type="button"
-        className="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >
-        Cancel
-      </button>
-    </form>
+   
     </div>
   </div>
   )

@@ -14,6 +14,7 @@ export default function index() {
   const [editData, setEditData] = useState({});
   const [isedit ,setIsEdit] = useState(false);
   const {setNotification} = useStateContext();
+  const [counter ,setCounter] = useState(0);
 
   // 
 
@@ -30,70 +31,19 @@ export default function index() {
 
    useEffect(()=>{
     fetchData();
-
-   },[]);
-
-   const handleSubmit =(event)=>{
-  
-
-    event.preventDefault();
-    // const data = new FormData(event.target);
-  
-    axiosClient.post('visatype/store',visatype).then((res)=>{
-      console.log(res);
-         if(res.status===200){
-           setNotification("Visatype created successfully",'');
-           event.target.reset();
-
-         }
-         else{
-          setErrorList(res.data.validation_error)
-
-         }
-     })
-
-
-   }
-
-   const editCountry = (id)=>{
-     const visatypes = axiosClient.get(`visatype/edit/${id}`).then((response)=>{
-      setVisaType(response.data);
-      setIsEdit(true);
-     })
-
-   }
-
-   const update = (event)=>{
-    event.preventDefault();
-    axiosClient.post(`visatype/update/${visatype.id}`,visatype).then((res)=>{
-      if(res.status===200){
-        setNotification("Visatype Updated successfully",'');
-        event.target.reset();
-        setIsEdit(false);
-
-       }
-       else{
-        setErrorList(res.data.validation_error)
-  
-       }
-    });
-   }
-
-   const handleOnChange = (event)=>{
-    setVisaType(
-        (pre)=>({
-          ...pre,
-          [event.target.name]: event.target.value,
-         
-         }));
-   }
-
+   },[counter]);
 
    const  deleteAction =(id)=>{
-    axiosClient.get(`visatype/delete/${id}`);
-    setNotification("Visatype Deleted successfully",'');
+    axiosClient.get(`visatype/delete/${id}`).then((res)=>{
+      setNotification(res.data.message,'delete');
+      setCounter(counter+1);
+    }).catch(()=>{
+      setNotification("Something went wrong",'delete');
+    });
 
    } 
+
+
   return (
     <div className="flex justify-between overflow-x-auto  sm:rounded-lg bg-gray-100 shadow-xl p-4">
         <div className="w-1/2 bg-white overflow-x-auto  sm:rounded-lg p-8 border-none  rounded-md shadow-sm">
@@ -128,6 +78,9 @@ export default function index() {
                 />
               </div>
             </div>
+            <Link to='create'>
+            <span className='bg-blue-600 h-full p-3 text-white fontstyle font-semibold rounded-md fontstyle text-sm'>Add visatype</span>
+          </Link>
           </div>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500  ">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -166,11 +119,11 @@ export default function index() {
                 <td className="px-6 py-4">{item.name}</td>
                 <td className="px-6 py-4 flex space-x-8">
                   <Link
-                    href="#"
+                    to={`edit/${item.id}`}
                     className="font-medium text-blue-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                   >
                     <EditIcon
-                    onClick={editCountry.bind(this, item.id)}
+           
                     ></EditIcon>
                   </Link>
                   <Link
@@ -187,73 +140,9 @@ export default function index() {
             </tbody>
           </table>
 
-          {/* <div className=" flex justify-center mt-8">
-            <nav aria-label="Page navigation example">
-              <ul class="inline-flex -space-x-px text-sm">
-                {totalPage.map((item, index) => (
-                  <li
-                    onClick={() => handlePageChange(item.label)}
-                    key={index}
-                    className=""
-                  >
-                    <button
-                      disabled={!item.url}
-                      class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border  border-gray-300  hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      {index == 0
-                        ? (item.label = "Previous")
-                        : totalPage.length - 1 == index
-                        ? (item.label = "Next")
-                        : item.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div> */}
         </div>
         <div>
-          <form
-            className="max-w-sm mx-auto shadow-xl p-8 bg-white border-none rounded-md"
-            onSubmit={isedit ? update :handleSubmit}
-          >
-            <h4 className="text-2xl font-bold dark:text-white" id="htmlFormheading">
-              Create
-            </h4>
-
-            <div className="mb-5 flex flex-col">
-              <label
-                htmlFor="large-input"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Name
-              </label>
-              <input
-              value={visatype.name}
-                type="text"
-                id="name"
-                name="name"
-                className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                onChange={handleOnChange}
-              />
-              <span className="text-red-600 self-center mt-2" id="name">{errorList ? errorList.name : ''}</span>
-            </div>
-
-           
-            <button
-              id="submitbutton"
-              type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            >
-              Submit
-            </button>
-            <button
-              type="button"
-              className="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            >
-              Cancel
-            </button>
-          </form>
+         
         </div>
       </div>
   )

@@ -15,16 +15,15 @@ class OfferController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request){    
        $validator = Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
             'icon'=>'required'
-
         ],[
-            'title'=>'Title is required',
-            'description'=>'Description is required',
-            'icon'=>'Icon is required'
+            'title.required'=>'Title is required',
+            'description.required'=>'Description is required',
+            'icon.required'=>'Icon is required'
 
         ]);
 
@@ -39,8 +38,8 @@ class OfferController extends Controller
             $offer['icon'] =  $filename;
             Offer::create($offer);
             return response()->json([
-                'status'=>"200",
-                'message'=>"Offer Created Successfully"
+                'status'=>200,
+                'message'=>"Offer created successfully"
                  
             ]);
         }
@@ -62,8 +61,8 @@ class OfferController extends Controller
             'description'=>'required',
 
         ],[
-            'title'=>'Title is required',
-            'description'=>'Description is required',
+            'title.required'=>'Title is required',
+            'description.required'=>'Description is required',
 
         ]);
   
@@ -83,8 +82,8 @@ class OfferController extends Controller
             $oldData->update($offer);
         }
         return response()->json([
-            'staus'=>200,
-            'messeage'=>"Offer is Update is Successfully"
+            'status'=>200,
+            'message'=>"Offer update  successfully"
         ]);
 
     }
@@ -94,7 +93,7 @@ class OfferController extends Controller
       image_delete('offer', $offer->icon);
       $offer->delete();
         return response()->json([
-           'message'=>"Offer deleted"
+           'message'=>"Offer  deleted successfully"
         ]);
 
     }

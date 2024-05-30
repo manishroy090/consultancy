@@ -14,9 +14,12 @@ class PatnerController extends Controller
     }
 
     public function store(Request $request){
+        $latest = Patner::latest()->first();
   
         $validatore =  Validator::make($request->all(),[
              'image'=>"required"
+        ],[
+            'image.required'=>"Image is required"
         ]);
 
         if($validatore->fails()){
@@ -25,15 +28,15 @@ class PatnerController extends Controller
              ]);
         }
         else{
-            $filename = image_upload('patner', $request->image,"patners", 64, 40);
+            $filename = image_upload('patner', $request->image,"patner_".(($latest->id?? 0) + 1), 64, 40);
             $patner['image'] = $filename;
             Patner::create($patner);
 
         }
 
         return response()->json([
-            'staus'=>200,
-            'messeage'=>"Patner is Created is Successfully"
+            'status'=>200,
+            'message'=>"Patner created successfully"
         ]);
 
     }
@@ -46,12 +49,12 @@ class PatnerController extends Controller
        
        $oldData = Patner::where('id',$id)->first();
        $data= $request->all();
-       $filename = image_update('patner', $request->image,$oldData ->image,"patners", 64, 40);
+       $filename = image_update('patner', $request->image,$oldData->image,"patners_".$oldData->id, 64, 40);
        $data['image'] = $filename;
        $oldData->update($data);
        return response()->json([
-        'staus'=>200,
-        'messeage'=>"Patner is Updated Successfully"
+        'status'=>200,
+        'message'=>"Patner updated successfully"
     ]);
     }
 
@@ -60,7 +63,7 @@ class PatnerController extends Controller
        image_delete('patner', $patner->image);
        $patner->delete();
          return response()->json([
-            'message'=>"Patner is  Deleted Successfully"
+            'message'=>"Patner deleted successfully"
         ]);
 
     }

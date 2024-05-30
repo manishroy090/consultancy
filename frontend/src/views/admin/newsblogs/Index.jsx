@@ -8,29 +8,9 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useStateContext } from '../../../context/ContextProvider';
 
 export default function Index() {
-    const [blog,setBlog] = useState({});
     const [blogs, setBlogs] = useState([]);
-    const [errors,setErrorList] = useState({});
-    const [isedit ,setEdit] = useState(false);
-    const [ckeditordata ,setCkeditorData] = useState();
+    const [action ,setAction] = useState();
     const {setNotification} = useStateContext();
-
-  
-    const handleOnChange = (event)=>{
-      setBlog((offer)=>({
-          ...offer,
-          [event.target.name]:event.target.value
-      }))
-  
-    }
-  
-    const handleCkeditorState = (event,editor)=>{
-      const data =editor.getData();
-      setCkeditorData(data);
-  
-     
-   }
-  
     const fetchData = async ()=>{
       const data = await axiosClient.get('newsblog/index');
       setBlogs(data.data)
@@ -39,54 +19,12 @@ export default function Index() {
      useEffect(()=>{
       fetchData();
   
-     },[])
-    const handleSubmit = (event)=>{
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      formData.append('description',ckeditordata); 
-      axiosClient.post('newsblog/store',formData).then((res)=>{
-        if(res.data.status==200){
-          event.target.reset();
-          setNotification("Newsblog created successfully",'');
+     },[action]);
 
-        }else{
-          setErrorList(res.data.errors);
-        }
-  
-      });
-  
-  
-    }
-  
-  
-    const handleEdit = (id)=>{
-        axiosClient.get(`newsblog/edit/${id}`).then((response)=>{
-        setBlog(response.data);
-      });
-      setEdit(true);
-  
-    }
-  
-    const handleUpdate = (event)=>{
-        event.preventDefault();
-            const formData = new FormData(event.target);
-            formData.append('description',ckeditordata); 
-            axiosClient.post(`newsblog/update/${blog.id}`,formData).then((response)=>{
-            if(response.data.status==200){
-              setNotification("Newsblog update successfully",'');
-              event.target.reset();
-
-            }else{
-              setErrorList(response.data.errors);
-            }
-  
-           })
-    }
-  
-  
     const handleDelete = (id)=>{
         axiosClient.get(`newsblog/delete/${id}`).then((resonse)=>{
           setNotification("Newsblog delete successfully",'delete');
+          setAction(true);
 
       })
     }
@@ -125,6 +63,9 @@ export default function Index() {
                 />
               </div>
             </div>
+            <Link to='create'>
+            <span className='bg-blue-600 h-full p-3 text-white fontstyle font-semibold rounded-md fontstyle text-sm'>Add news and blog</span>
+          </Link>
           </div>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500  ">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -158,7 +99,7 @@ export default function Index() {
             </thead>
             <tbody>
               {blogs.map((item,index)=>(
-                <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr key={index} className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   {index+1}
                 </td>
@@ -171,19 +112,19 @@ export default function Index() {
 
                 <td className="px-6 py-4 flex space-x-8">
                   <Link
-                    href="#"
+                    to={`edit/${item.id}`}
                     className="font-medium text-blue-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                   >
                     <EditIcon
-                     onClick={handleEdit.bind(this, item.id)}
+                 
                     ></EditIcon>
                   </Link>
                   <Link
-                    href="#"
+                    onClick={handleDelete.bind(this, item.id)}
                     className="font-medium text-red-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                   >
                     <DeleteIcon
-                   onClick={handleDelete.bind(this, item.id)}
+                
                     ></DeleteIcon>
                   </Link>
                 </td>
@@ -193,99 +134,9 @@ export default function Index() {
               
             </tbody>
           </table>
-
-          {/* <div className=" flex justify-center mt-8">
-            <nav aria-label="Page navigation example">
-              <ul class="inline-flex -space-x-px text-sm">
-                {totalPage.map((item, index) => (
-                  <li
-                    onClick={() => handlePageChange(item.label)}
-                    key={index}
-                    className=""
-                  >
-                    <button
-                      disabled={!item.url}
-                      class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border  border-gray-300  hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      {index == 0
-                        ? (item.label = "Previous")
-                        : totalPage.length - 1 == index
-                        ? (item.label = "Next")
-                        : item.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div> */}
         </div>
         <div>
-        <form className=" ml-8 mx-auto shadow-xl p-8" onSubmit={isedit ? handleUpdate : handleSubmit}>
-          <h4 className="text-2xl font-bold dark:text-white">Create</h4>
-
-          <div className="mb-5 flex flex-col  ">
-            <label
-              htmlFor="large-input"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Title
-            </label>
-            <input
-            value={blog.title}
-            name="title"
-            onChange={handleOnChange}
-            type="text"
-            id="large-input"
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-          <span className="text-red-600 self-center mt-2 " id="name">{errors?.title ? errors.title : ''}</span>
-          </div>
-          <div className="mb-5 flex flex-col">
-            <label
-              htmlFor="base-input"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Description
-            </label>
-            <CKEditor
         
-             editor={ClassicEditor}
-             onChange={(editor, data) => handleCkeditorState(editor, data)}
-            />
-                   <span className="text-red-600 self-center mt-2 " id="name">{errors?.description ? errors.description : ''}</span>
-          </div>
-          <div className="mb-5 flex flex-col">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              htmlFor="user_avatar"
-            >
-              Image
-            </label>
-            <input
-            
-              name="image"
-              onChange={handleOnChange}
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-              aria-describedby="user_avatar_help"
-              id="user_avatar"
-              type="file"
-            />
-                   <span className="text-red-600 self-center mt-2 " id="name">{errors?.image ? errors.image : ''}</span>
-          </div>
-          <button
-            type="submit"
-        
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          >
-            Submit
-          </button>
-          <button
-              type="button"
-            className="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          >
-            Cancel
-          </button>
-        </form>
         </div>
       </div>
     </div>

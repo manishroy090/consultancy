@@ -4,20 +4,24 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useStateContext } from '../../../context/ContextProvider';
+import ImageUpload from '../../../components/ImageUpload';
+import imageicon from '../../../image/image.png';
+
 
 export default function Index() {
  
   const [isedit, setIsEdit] = useState(false);
-  const [aboutus ,setAboutus] = useState({});
-  const [aboutuslist,setAboutuslist] = useState([]);
+  const [team ,setTeammember] = useState({});
+  const [teammemberList,setTeammemberList] = useState([]);
   const [errorList , setErrorList] = useState({});
   const {setNotification} = useStateContext();
+  const [counter, setCounter] = useState(0);
 
   
 
   const handleOnChange = (event)=>{
-    setAboutus((aboutus)=>({
-        ...aboutus,
+    setTeammember((team)=>({
+        ...team,
         [event.target.name]:event.target.value
 
     }))
@@ -25,34 +29,44 @@ export default function Index() {
 
   const fetchData = async ()=>{
    const res = await  axiosClient.get('teammember/index');
-   setAboutuslist(res.data);
+   setTeammemberList(res.data);
+   
 
   }
 
   useEffect(()=>{
     fetchData();
-  },[]);
+    document.getElementById('formheading').innerText = 'Create';
+    document.getElementById('submitbutton').innerHTML = "Submit";
+    formRest();
+  },[counter]);
 
   const handleOnSubmit = (event)=>{
     event.preventDefault();
     const data = new FormData(event.target);
     axiosClient.post('teammember/store',data).then((response)=>{
            if(response.data.status ==200){
-                 setNotification("Teammember created successfully",'');
-                 event.target.reset();
+                 setNotification(response.data.message,'');
+                 setCounter(counter+1);
 
            }
            else{
             setErrorList(response.data.errors);
            }
-    });
+    }).catch(()=>{
+      setNotification("Something went wrong",'delete');
+     });;
   }
   
 
 
   const handleedit = (id)=>{
     axiosClient.get(`teammember/edit/${id}`).then((response)=>{
-      setAboutus(response.data);
+      setTeammember(response.data);
+      document.getElementById('formheading').innerText = 'Edit';
+      document.getElementById('submitbutton').innerHTML = "Update";
+      document.getElementById('image_preview_image').setAttribute('src', `http://localhost:8000/image/teammember/${response.data.image}`);
+
     })
     setIsEdit(true);
   }
@@ -60,18 +74,41 @@ export default function Index() {
   const handleupdate = (event)=>{
      event.preventDefault();
      const data = new FormData(event.target);
-     axiosClient.post(`teammember/update/${aboutus.id}`,data);
-     setNotification("Teammember update successfully",'');
-     event.target.reset();
+     axiosClient.post(`teammember/update/${team.id}`,data).then((res)=>{
+      if(res.data.status===200){
+        setNotification(res.data.message,'');
+        setCounter(counter+1);
+      }else{
+        setErrorList(response.data.errors);
+      }
+
+     }).catch(()=>{
+      setNotification("Something went wrong",'delete');
+     });
+
 
   }
 
   const handledelete = (id)=>{
-    axiosClient.get(`teammember/delete/${id}`);
-    setNotification("Teammember delete successfully",'delete');
-
+    axiosClient.get(`teammember/delete/${id}`).then((res)=>{
+      setNotification(res.data.message,'delete');
+      setCounter(counter+1);
+    }).catch(()=>{
+      setNotification("Something went wrong",'delete');
+     });;
 
   }
+
+  const formRest = ()=>{
+    const form = document.querySelector('#teammemberform');
+    form.reset();
+    setTeammember({});
+    document.getElementById('image_preview_image').setAttribute('src', imageicon);
+
+   
+  }
+
+
   return (
     <div className="flex justify-between overflow-x-auto  sm:rounded-lg bg-gray-100 shadow-xl p-4">
     <div className="w-1/2 bg-white overflow-x-auto  sm:rounded-lg p-8 border-none  rounded-md shadow-sm">
@@ -141,9 +178,9 @@ export default function Index() {
           </tr>
         </thead>
         <tbody>
-          {aboutuslist.map((item,index)=>(
+          {teammemberList.map((item,index)=>(
             <tr
-              
+               key={index}
               className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
    
             >
@@ -160,19 +197,19 @@ export default function Index() {
 
               <td className="px-6 py-4 flex space-x-8">
                 <Link
-                  href="#"
+               onClick={handleedit.bind(this, item.id)}
                   className="font-medium text-blue-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                 >
                   <EditIcon
-                    onClick={handleedit.bind(this, item.id)}
+                   
                   ></EditIcon>
                 </Link>
                 <Link
-                  href="#"
+                    onClick={handledelete.bind(this, item.id)}
                   className="font-medium text-red-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                 >
                   <DeleteIcon
-                    onClick={handledelete.bind(this, item.id)}
+               
                   ></DeleteIcon>
                 </Link>
               </td>
@@ -184,13 +221,14 @@ export default function Index() {
     </div>
     <div>
       <form
-        className="max-w-sm mx-auto shadow-xl p-8 bg-white border-none rounded-md"
+      id='teammemberform'
+        className="max-w-sm mx-auto shadow-xl  bg-white border-none rounded-md"
         onSubmit={isedit ? handleupdate : handleOnSubmit}
       >
-        <h4 className="text-2xl font-bold dark:text-white" id="htmlFormheading">
+          <h4 className="text-xl  text-white fontstyle font-semibold  px-10 py-2 dark:text-white bg-blue-600 w-full border rounded-t-lg" id="formheading">
           Create
         </h4>
-
+<div className='p-8'>
         <div className="mb-5 flex flex-col">
           <label
             htmlFor="large-input"
@@ -199,14 +237,14 @@ export default function Index() {
             Title
           </label>
           <input
-            value={aboutus.title}
+            value={team.title || ''}
             type="text"
             id="name"
             name="title"
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={handleOnChange}
           />
-          <span className="text-red-600 self-center mt-2" id="name">
+          <span className="text-red-600 self-center mt-2 italic" id="name">
           {errorList.title}
           </span>
         </div>
@@ -220,36 +258,18 @@ export default function Index() {
           </label>
      
           <input
-            value={aboutus.designation}
+            value={team.designation || ''}
             type="text"
             id="name"
             name="designation"
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={handleOnChange}
           />
-          <span className="text-red-600 self-center mt-2" id="name">
+          <span className="text-red-600 self-center mt-2 italic" id="name">
           {errorList.designation}
           </span>
         </div>
-        <div className="mb-5 flex flex-col">
-          <label
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            htmlFor="user_avatar"
-          >
-            Image
-          </label>
-          <input
-            name="image"
-            className="block w-full  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-            aria-describedby="user_avatar_help"
-            onChange={handleOnChange}
-            id="image"
-            type="file"
-          />
-          <span className="text-red-600 self-center mt-2">
-            {errorList.image}
-          </span>
-        </div>
+        <ImageUpload name='image' lable="Image"></ImageUpload>
         <button
           id="submitbutton"
           type="submit"
@@ -258,11 +278,13 @@ export default function Index() {
           Submit
         </button>
         <button
+         onClick={formRest}
           type="button"
-          class="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          className="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
-          Cancel
+          Reset
         </button>
+        </div>
       </form>
     </div>
   </div>

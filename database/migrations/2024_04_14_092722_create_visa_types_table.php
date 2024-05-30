@@ -14,6 +14,7 @@
             Schema::create('visa_types', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
+                $table->text('slug')->nullable();
                 $table->timestamps();
             });
         }

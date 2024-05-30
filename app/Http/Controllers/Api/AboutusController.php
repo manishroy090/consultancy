@@ -20,8 +20,8 @@ class AboutusController extends Controller
             'title'=>'required',
             'description'=>"required"
         ],[
-            'title'=>"Title is required",
-            'description'=>"Description is required"
+            'title.required'=>"Title is required",
+            'description.required'=>"Description is required"
         ]);
 
         if($validator->fails()){
@@ -34,7 +34,7 @@ class AboutusController extends Controller
             Aboutus::create($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Created Successfully"
+                'message'=>"Aboutus  created Successfully"
 
             ]);
         }
@@ -52,8 +52,8 @@ class AboutusController extends Controller
             'title'=>'required',
             'description'=>"required"
         ],[
-            'title'=>"Title is required",
-            'description'=>"Description is required"
+            'title.required'=>"Title is required",
+            'description.required'=>"Description is required"
         ]);
 
         if($validator->fails()){
@@ -66,7 +66,7 @@ class AboutusController extends Controller
             Aboutus::where('id',$id)->update($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Update Successfully"
+                'message'=>"Aboutus  updated Successfully"
 
             ]);
         }
@@ -78,12 +78,10 @@ class AboutusController extends Controller
 
         Aboutus::where('id',$id)->delete();
         return  response()->json([
-           'message'=>"About us Deleted"
+           'message'=>"Aboutus deleted successfully"
         ]);
 
     }
 
-    public function details(Request $request){
-        return dd($request->all());
-    }
+  
 }

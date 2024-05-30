@@ -32,15 +32,27 @@ class ServicesController extends Controller
         }
 
         else{
-
+            $imgarray= [];
+          if($request->icon){
             $imgarray= [
                 'image'=>$request->image,
                 'icon'=>$request->icon
             ];
-           $filename = upload_multiple_image('service',$imgarray ,$request->title, 64, 40);               
+          }else{
+            $imgarray= [
+                'image'=>$request->image,
+            ];
+          }
+
+          
+           $filename = upload_multiple_image('service',$imgarray ,$request->title, 800, 533);               
                $service = $validator->validate();
                $service['image'] = $filename['image'];
-               $service['icon'] = $filename['icon'];
+               if($request->icon){
+                $service['icon'] = $filename['icon'];
+              }
+
+            //   return dd($service);
                Services::create($service);
               return response()->json([
                 'status'=>200,
@@ -90,7 +102,7 @@ class ServicesController extends Controller
              Services::where('id',$id)->update($service);
              return response()->json([
                'status'=>200,
-                'message'=>"Service Updated successfully"
+                'message'=>"Service updated successfully"
             ]);
         }
 
@@ -99,7 +111,7 @@ class ServicesController extends Controller
     public function delete($id){
         Services::where('id',$id)->delete();
         return response()->json([
-            'message'=>'Service is Deleted'
+            'message'=>'Service  deleted successfully '
         ]);
 
     }

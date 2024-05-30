@@ -1,5 +1,5 @@
-import React,{ useState ,useEffect} from 'react'
-  import axiosClient from '../../../axios_client'
+import React,{ useState ,useEffect} from 'react';
+import axiosClient from '../../../axios_client';
 export default function Blogs() {
   const [blogs,setBlogs] = useState([]);
   const fetchData = async ()=>{

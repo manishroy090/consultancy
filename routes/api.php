@@ -15,8 +15,8 @@ use App\Http\Controllers\Api\TestimonialsController;
 use App\Http\Controllers\Api\NewsblogController;
 use App\Http\Controllers\Api\PatnerController;
 use App\Http\Controllers\Api\FrontendController;
+use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\AboutDetailsController;
-
 
 
 
@@ -50,6 +50,17 @@ Route::group(['middleware' => "api"],function(){
     Route::post('/delete/{id}', [CountryController::class, 'delete']);
 
 
+});
+
+Route::controller(CourseController::class)->group(function(){
+    Route::group(['prefix'=>"course", 'as'=>'course.'],function(){
+        Route::get('/index','index');
+        Route::post('/store','store');
+        Route::get('edit/{id}','edit');
+        Route::post('update/{id}','update');
+        Route::get('delete/{id}','delete');
+    });
+  
 });
 
 
@@ -98,17 +109,7 @@ Route::controller(AboutusController::class)->group(function(){
   
 });
 
-Route::controller(AboutDetailsController::class)->group(function(){
-    Route::group(['prefix'=>"aboutdetails", 'as'=>'aboutdetails.'],function(){
-        Route::get('/index','index');
-        Route::post('/store/{id}','store');
-        Route::get('edit/{id}','edit');
-        Route::post('update/{id}','update');
-        Route::get('delete/{id}','delete');
-        Route::post('/details','details');
-    });
-  
-});
+
 
 Route::controller(ServicesController::class)->group(function(){
     Route::group(['prefix'=>"service", 'as'=>'service.'],function(){
@@ -182,7 +183,7 @@ Route::controller(PatnerController::class)->group(function(){
 Route::controller(FrontendController::class)->group(function(){
     Route::group(['prefix'=>"frontend", 'as'=>'frontend.'],function(){
         Route::get('/home','home');
-        Route::get('/visa/{id}','visa');
+        Route::get('/{visatypeslug}/{countryslug}','visa');
         Route::get('/blogs','blogs');
       
     });

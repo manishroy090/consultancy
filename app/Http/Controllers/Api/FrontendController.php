@@ -1,55 +1,65 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
-use App\Models\Country;
-use Illuminate\Http\Request;
 use App\Models\VisaType;
-use App\Models\Visa;
-use Illuminate\Support\Facades\DB;
 use App\Models\Offer;
 use App\Models\NewsBlog;
 use App\Models\Testimonials;
 use App\Models\Teammember;
+use App\Models\Visa;
 use App\Models\Aboutus;
 use App\Models\AboutDetails;
 use App\Models\Patner;
 use App\Models\Services;
 use App\Models\Whyus;
+use App\Models\Country;
+
 
 class FrontendController extends Controller
 {
     
-
     public function home(){
-     $about=Aboutus::first();
+
      return response()->json([
-       'visatypes'=>VisaType::with('countries')->get(),
+       'visatypes'=>VisaType::has('countries')->with('countries')->get(),
        'offers'=>Offer::all(),
        'blogs'=>NewsBlog::all(),
        'testimonials'=>Testimonials::all(),
        'teammembers'=> Teammember::all(),
-       'aboutus'=>$about,
-       'aboutdetails'=>AboutDetails::where('about_id',$about->id)->get(),
+       'aboutus'=>Aboutus::first(),
        'patners'=>Patner::all(),
        'services'=>Services::where('specialoffer',null)->get(),
        'specialservices'=>Services::where('specialoffer',1)->get(),
-       'whyus'=>Whyus::first()
+       'whyus'=>Whyus::first(),
+       'countries'=>Country::has('visas')->get()
      ]);
     }
 
-    public function visa($id){
-        $visas =Visa::select('countries.name')
-        ->join('countries','visas.country_id','=','countries.id')
-        ->join('visa_types','visas.visatype_id','=','visa_types.id')
-        ->where('visas.visatype_id',$id)
-        ->get();
-        return response()->json([
-          'visas'=> $visas
-        ]
-         
-        );
+    public function visa($visaTypeSlug, $countrySlug){
+      $visadetails = VisaType::where('slug', $visaTypeSlug)
+      ->with(['countries' => function ($query) use ($countrySlug) {
+          $query->where('slug', $countrySlug)->with('visas')->get();
+      }])
+      ->first();
+
+      // $countryHavingOtherVisaType = Country::where('slug',$countrySlug)->with(['visaTypes'=>function($query) use ($visaTypeSlug){
+      //   $query->where('slug','!=',$visaTypeSlug);
+      // }])->first();
+    
+
+
+     $countriesHavingSimilarVisa = VisaType::with(['countries'=>function($query) use ($countrySlug){
+            $query->where('slug','!=',$countrySlug);
+     },'visas'])->where('slug',$visaTypeSlug)->first();
+
+
+     return response()->json([
+         'visadetails'=>$visadetails,
+         'countriesHavingSimilarVisa'=>$countriesHavingSimilarVisa,
+        //  'countryHavingOtherVisaType'=>$countryHavingOtherVisaType
+     ]);
+      
     }
 
 

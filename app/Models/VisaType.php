@@ -17,5 +17,16 @@ class VisaType extends Model
     {
         return $this->belongsToMany(Country::class, 'visas');
     }
+    
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'visas');
+    }
+
+    public function visas()
+    {
+        return $this->hasMany(Visa::class,'visa_type_id','id');
+    }
+   
    
 }

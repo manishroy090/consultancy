@@ -10,7 +10,8 @@ const StateContext = createContext({
   setToken: () => { },
   setNotification: () => { },
   textFilter: () => { },
-  getHeading:()=>{}
+  getHeading:()=>{},
+  renderHtml:()=>{ }
 })
 
 export const ContextProvider = ({ children }) => {
@@ -73,7 +74,12 @@ export const ContextProvider = ({ children }) => {
       }
 
     }
+  }
 
+  const renderHtml=(string,id)=>()=>{
+    console.log("method called");
+    // console.log(id);
+    // Document.getElementbyId(id).innerHTML=string;
 
   }
 
@@ -87,11 +93,6 @@ export const ContextProvider = ({ children }) => {
     else{
       return [];
     }
-
-    
-   
-    
-
   }
 
 
@@ -104,7 +105,8 @@ export const ContextProvider = ({ children }) => {
       notification,
       setNotification,
       textFilter,
-      getHeading
+      getHeading,
+      renderHtml
     }}>
       {children}
       <ToastContainer />

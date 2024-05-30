@@ -74,6 +74,17 @@ export default function GuestLayout() {
                   <span className="flex-1 ms-3 whitespace-nowrap">Contry</span>
                 </Link>
               </li>
+
+              <li>
+                <Link
+                  to="/dashboard/course"
+                  className="flex items-center p-2 text-white rounded-lg hover:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                >
+                  <FlagIcon></FlagIcon>
+                  <span className="flex-1 ms-3 whitespace-nowrap">Course</span>
+                </Link>
+              </li>
+
               <li>
                 <Link to="/dashboard/visatype" className='flex items-center p-2 text-white rounded-lg hover:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group'>
                 

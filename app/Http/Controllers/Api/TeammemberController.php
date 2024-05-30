@@ -37,7 +37,7 @@ class TeammemberController extends Controller
             Teammember::create($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Created Successfully"
+                'message'=>"Teammember  created successfully"
 
             ]);
         }
@@ -74,7 +74,7 @@ class TeammemberController extends Controller
             $oldData->update($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Update Successfully"
+                'message'=>"Teammember  updated successfully"
 
             ]);
         }
@@ -88,7 +88,7 @@ class TeammemberController extends Controller
         image_delete('teammember', $teammember->image);
         $teammember->delete();
         return  response()->json([
-           'message'=>"About us Deleted"
+            'message'=>"Teammember  deleted successfully"
         ]);
 
     }

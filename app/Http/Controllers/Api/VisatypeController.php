@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\VisaType;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Country;
+use Illuminate\Support\Str;
 
 
 class VisatypeController extends Controller
@@ -27,7 +28,7 @@ class VisatypeController extends Controller
 
         ],[
             
-            'name'=>"Name is required",
+            'name.requried'=>"Name is required",
         ]);
 
         if($validator->fails()){
@@ -37,10 +38,11 @@ class VisatypeController extends Controller
 
         }else{
             $visaType =$validator->validate();
+            $visaType['slug']=Str::slug($visaType['name']);
             VisaType::create($visaType);
             return response()->json([
-                'staus'=>200,
-                'messeage'=>"Visatype is create is Successfully"
+                'status'=>200,
+                'message'=>"Visatype created successfully"
             ]);
 
         }
@@ -60,7 +62,7 @@ class VisatypeController extends Controller
 
         ],[
             
-            'name'=>"Name is required",
+            'name.required'=>"Name is required",
         ]);
 
 
@@ -72,10 +74,11 @@ class VisatypeController extends Controller
   
           }else{
               $visaType =$validator->validate();
+              $visaType['slug']=Str::slug($visaType['name']);
               VisaType::where('id',$id)->update($visaType);
               return response()->json([
-                  'staus'=>200,
-                  'messeage'=>"Visatype is Update is Successfully"
+                  'status'=>200,
+                  'message'=>"Visatype update  successfully"
               ]);
   
         }
@@ -83,7 +86,10 @@ class VisatypeController extends Controller
     }
     public function delete($id){
         VisaType::where('id',$id)->delete();
-        return "Visatype is Deleted";
+        return response()->json([
+            'message'=>"Visatype deleted successfully"
+        ]);
+        
         
     }
 }

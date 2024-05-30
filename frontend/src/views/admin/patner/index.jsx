@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ErrorSharp } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useStateContext } from '../../../context/ContextProvider';
+import ImageUpload from '../../../components/ImageUpload';
+import imageicon from '../../../image/image.png';
 
 
 export default function index() {
@@ -13,6 +15,7 @@ export default function index() {
   const [patners, Setpatners] = useState([]);
   const [isedit ,setIsEdit] = useState(false);
   const {setNotification} = useStateContext();
+  const [counter ,setCounter] = useState(0);
 
 
 
@@ -33,7 +36,10 @@ export default function index() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    formRest();
+    document.getElementById('formheading').textContent='Create';
+    document.getElementById('submitbutton').textContent='Submit';
+  }, [counter]);
 
 
  
@@ -41,24 +47,29 @@ export default function index() {
   const handleOnSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    axiosClient.post("/patner/store", data).then((res) => {
-      if (res.status === 200) {
+    axiosClient.post("/patner/store", data).then((response) => {
+      if (response.data.status === 200) {
         event.target.reset();
-        setNotification("Patner created successfully",'');
-     
+        setNotification(response.data.message,'');
+        setCounter(counter+1);
       } else {
-        setErrorList(res.data.validator_err);
+        setErrorList(response.data.validator_err);
       }
+    }).catch(()=>{
+      setNotification('something Went Wrong','delete');
+
     });
   };
 
   const handleEdit = (id) => {
     axiosClient.get(`patner/edit/${id}`).then((response)=>{
       setPatner(response.data);
+      setIsEdit(true);
+      document.getElementById('formheading').textContent='Edit';
+      document.getElementById('submitbutton').textContent='Update';
+      document.getElementById('image_preview_image').setAttribute('src', `http://localhost:8000/image/patner/${response.data.image}`);
+
     });
-    setIsEdit(true);
-    document.getElementById('formheading').textContent='Edit';
-    document.getElementById('submitbutton').textContent='Update';
 
   };
 
@@ -67,25 +78,36 @@ const handleUpdate=(event)=>{
   event.preventDefault();
   const data = new FormData(event.target);
   axiosClient.post(`patner/update/${patner.id}`, data).then((response)=>{
-      if (response.status === 200) {
+      if (response.data.status === 200) {
         event.target.reset();
-        setNotification("Patner Update successfully",'');
+        setNotification(response.data.message,'');
+        setCounter(counter+1);
    
       } else {
         setErrorList(response.data.validator_err);
       }
+
+  }).catch(()=>{
+    setNotification('something Went Wrong','delete');
 
   })
 }
 
 const deleteAction = (id)=>{
     axiosClient.post(`patner/delete/${id}`).then((response)=>{
-      setNotification("Patner delete successfully",'delete');
+      setNotification(response.data.message,'delete');
+      setCounter(counter+1);
 
+       }).catch(()=>{
+        setNotification("Something Went Wrong",'delete');
 
        });
 }
 
+const formRest = ()=>{
+  document.getElementById('image_preview_image').setAttribute('src', imageicon);
+  setErrorList({});
+}
 
   
 
@@ -171,19 +193,20 @@ const deleteAction = (id)=>{
 
                   <td className="px-6 py-4 flex space-x-8">
                     <Link
-                      href="#"
+                      onClick={handleEdit.bind(this, item.id)}
+                 
                       className="font-medium text-blue-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                     >
                       <EditIcon
-                          onClick={handleEdit.bind(this, item.id)}
+                        
                      
                       ></EditIcon>
                     </Link>
                     <Link
-                      href="#"
+                       onClick={deleteAction.bind(this, item.id)}
                       className="font-medium text-red-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                     >
-                      <DeleteIcon         onClick={deleteAction.bind(this, item.id)}
+                      <DeleteIcon       
                  
                       ></DeleteIcon>
                     </Link>
@@ -199,44 +222,33 @@ const deleteAction = (id)=>{
         </div>
         <div>
           <form
-            className="max-w-sm mx-auto shadow-xl p-8 bg-white border-none rounded-md"
+            className="max-w-sm mx-auto shadow-xl  bg-white border-none rounded-md"
             onSubmit={isedit ? handleUpdate : handleOnSubmit}
           >
-            <h4 className="text-2xl font-bold dark:text-white" id="formheading">
+            <h4 className="text-xl  text-white fontstyle font-semibold  px-10 py-2 dark:text-white bg-blue-600 w-full border rounded-t-lg" id="formheading">
               Create
             </h4>
-            <div className="mb-5 flex flex-col">
-              <label
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                htmlFor="user_avatar"
-              >
-                Image
-              </label>
-              <input
-                name="image"
-                className="block w-full  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                aria-describedby="user_avatar_help"
-                onChange={handleOnChange}
-                id="image"
-                type="file"
-              />
-              <span className="text-red-600 self-center mt-2">
-                {errors?.image ? errors.image : ''}
-              </span>
-            </div>
+            <div className='p-8'>
+              <div className='flex flex-col'>
+              <ImageUpload name='image' lable="Image"></ImageUpload>
+            <span className='text-red-600 italic'>{errors ? errors.image : '' || ''}</span>
+              </div>
+  
             <button
               id="submitbutton"
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
               Submit
             </button>
             <button
+             onClick={formRest}
               type="button"
               className="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
-              Cancel
+              Reset
             </button>
+            </div>
           </form>
         </div>
       </div>

@@ -6,22 +6,26 @@ import axiosClient from '../../../../axios_client';
 import { useStateContext } from '../../../context/ContextProvider';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ConstructionOutlined } from "@mui/icons-material";
 
 
 export default function index() {
   const [isedit, setIsEdit] = useState(false);
-  const [aboutus ,setAboutus] = useState({});
-  const [aboutuslist,setAboutuslist] = useState([]);
+  const [whyus ,setwhyys] = useState({});
+  const [whyuslist,setwhyuslist] = useState([]);
   const [errorList , setErrorList] = useState({});
   const {setNotification} = useStateContext();
-  const [ckeditordata ,setCkeditorData] = useState();
+  const [counter ,setCounter] = useState(0);
+  const [ckeditordata ,setCkeditorData] = useState({
+    description:''
+  });
 
 
   
 
   const handleOnChange = (event)=>{
-    setAboutus((aboutus)=>({
-        ...aboutus,
+    setwhyys((whyus)=>({
+        ...whyus,
         [event.target.name]:event.target.value
 
     }))
@@ -29,61 +33,103 @@ export default function index() {
 
   const fetchData = async ()=>{
    const res = await  axiosClient.get('whyus/index');
-   setAboutuslist(res.data);
+   setwhyuslist(res.data);
 
   }
 
-  const handleCkeditorState = (event,editor)=>{
-    const data =editor.getData();
-    setCkeditorData(data);
-   
- }
+
+  const handleCkeditorState = (editorName, event, editor) => {
+    const data = editor.getData();
+    setCkeditorData(prevState => ({
+      ...prevState,
+      [editorName]: data
+    }));
+
+  }
 
   useEffect(()=>{
+    formRest();
     fetchData();
-  },[]);
+    setErrorList({});
+    setIsEdit(false);
+    document.getElementById('formheading').innerText="Create";
+    document.getElementById('submitbutton').innerText="Submit";
+  },[counter]);
 
   const handleOnSubmit = (event)=>{
     event.preventDefault();
     const formData = new FormData(event.target);
-    formData.append('description',ckeditordata)
+    formData.append('description',ckeditordata.description)
     axiosClient.post('whyus/store',formData).then((response)=>{
-           if(response.data.status ==200){
-            setNotification("Whyus create successfully",'');
+           if(response.data.status ===200){
+            setNotification(response.data.message,'');
+            setCounter(counter+1);
 
            }
            else{
             setErrorList(response.data.errors);
            }
-    });
+    }).catch((error)=>{
+       console.log(error);
+      setNotification("Something went Wrong",'delete');
+
+     });;
   }
   
 
 
   const handleedit = (id)=>{
     axiosClient.get(`whyus/edit/${id}`).then((response)=>{
-      setAboutus(response.data);
+      setwhyys(response.data);
+      document.getElementById('formheading').innerText="Edit";
+      document.getElementById('submitbutton').innerText="Update";
+      setCkeditorData({'description':response.data.description});
+      setIsEdit(true);
     })
-    setIsEdit(true);
   }
 
   const handleupdate = (event)=>{
      event.preventDefault();
      const formData = new FormData(event.target);
-     formData.append('description',ckeditordata)
-     axiosClient.post(`whyus/update/${aboutus.id}`,formData);
-     setNotification("Whyus update successfully",'');
+     formData.append('description',ckeditordata.description)
+     axiosClient.post(`whyus/update/${whyus.id}`,formData).then((response)=>{
+      if(response.data.status ===200){
+        setNotification(response.data.message,'');
+        setCounter(counter+1);
+      
+      }
+      else{
+        setErrorList(response.data.errors);
+
+      }
+
+     }).catch((error)=>{
+      console.log(error);
+      setNotification("Something went Wrong",'delete');
+
+     });
 
   }
 
   const handledelete = (id)=>{
-    axiosClient.get(`whyus/delete/${id}`);
-    setNotification("Whyus delete successfully",'delete');
+    axiosClient.get(`whyus/delete/${id}`).then((res)=>{
+      setNotification(res.data.message,'delete');
+      setCounter(counter+1);
+    }).catch(()=>{
+      setNotification("Something went Wrong",'delete');
 
+     });
+  }
 
+  const formRest = ()=>{
+    const form = document.querySelector('#whyusform');
+    form.reset();
+    setCkeditorData({description:""});  // Clear CKEditor data
+    setwhyys({});
+   
   }
   return (
-    <div className="flex justify-between overflow-x-auto  sm:rounded-lg bg-gray-100 shadow-xl p-4">
+    <div className="flex  space-x-32 overflow-x-auto  sm:rounded-lg bg-gray-100 shadow-xl p-4">
     <div className="w-1/2 bg-white overflow-x-auto  sm:rounded-lg p-8 border-none  rounded-md shadow-sm">
       <div className="flex  justify-between pr-24 ">
         <div className="pb-4 ">
@@ -138,9 +184,7 @@ export default function index() {
             <th scope="col" className="px-6 py-3">
               Title
             </th>
-            <th scope="col" className="px-6 py-3">
-              Description
-            </th>
+          
 
             <th scope="col" className="px-6 py-3">
               Action
@@ -148,9 +192,9 @@ export default function index() {
           </tr>
         </thead>
         <tbody>
-          {aboutuslist.map((item,index)=>(
+          {whyuslist.map((item,index)=>(
             <tr
-              
+               key={index}
               className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
    
             >
@@ -159,23 +203,22 @@ export default function index() {
               </td>
           
               <td className="px-6 py-4">{item.title}</td>
-              <td className="px-6 py-4">{item.description}</td>
-
+       
               <td className="px-6 py-4 flex space-x-8">
                 <Link
-                  href="#"
+                onClick={handleedit.bind(this, item.id)}
                   className="font-medium text-blue-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                 >
                   <EditIcon
-                    onClick={handleedit.bind(this, item.id)}
+             
                   ></EditIcon>
                 </Link>
                 <Link
-                  href="#"
+                onClick={handledelete.bind(this, item.id)}
                   className="font-medium text-red-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                 >
                   <DeleteIcon
-                    onClick={handledelete.bind(this, item.id)}
+                  
                   ></DeleteIcon>
                 </Link>
               </td>
@@ -187,13 +230,14 @@ export default function index() {
     </div>
     <div>
       <form
-        className="max-w-sm mx-auto shadow-xl p-8 bg-white border-none rounded-md"
+       id="whyusform"
+        className="w-full mx-auto shadow-xl  bg-white border-none rounded-md"
         onSubmit={isedit ? handleupdate : handleOnSubmit}
       >
-        <h4 className="text-2xl font-bold dark:text-white" id="formheading">
+          <h4 className="text-xl  text-white fontstyle font-semibold  px-10 py-2 dark:text-white bg-blue-600 w-full border rounded-t-lg" id="formheading">
           Create
         </h4>
-
+<div className="p-8">
         <div className="mb-5 flex flex-col">
           <label
             htmlFor="large-input"
@@ -202,7 +246,7 @@ export default function index() {
             Title
           </label>
           <input
-            value={aboutus.title}
+            value={whyus.title || ''}
             type="text"
             id="name"
             name="title"
@@ -223,10 +267,20 @@ export default function index() {
           </label>
      
           <CKEditor
-         name="description"
-         editor={ClassicEditor}
-         onChange={(editor, data) => handleCkeditorState(editor, data)}
-        />
+          data={ckeditordata.description}
+              name="description"
+              editor={ClassicEditor}
+              onChange={(editor, data) => handleCkeditorState('description', editor, data)}
+              onReady={(editor)=>{
+                const view = editor.editing.view;
+                const root = view.document.getRoot();
+                view.change((writer) => {
+                  writer.setStyle('max-height', '250px', root);
+                  writer.setStyle('min-height', '180px', root);
+                });
+             }}
+
+            />
           <span className="text-red-600 self-center mt-2">
           {errorList.description}
           </span>
@@ -239,11 +293,13 @@ export default function index() {
           Submit
         </button>
         <button
+         onClick={formRest}
           type="button"
           className="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
-          Cancel
+          Reset
         </button>
+        </div>
       </form>
     </div>
   </div>

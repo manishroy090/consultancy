@@ -21,9 +21,9 @@ class NewsblogController extends Controller
             'image'=>'required'
 
         ],[
-            'title'=>'Title is required',
-            'description'=>'Description is required',
-            'image'=>'image is required'
+            'title.required'=>'Title is required',
+            'description.required'=>'Description is required',
+            'image.required'=>'image is required'
 
         ]);
 
@@ -41,8 +41,8 @@ class NewsblogController extends Controller
         }
         
         return response()->json([
-            'status'=>"200",
-            'message'=>"Offer Created Successfully"
+            'status'=>200,
+            'message'=>"News created successfully"
              
         ]);
 
@@ -61,8 +61,8 @@ class NewsblogController extends Controller
             'description'=>'required',
 
         ],[
-            'title'=>'Title is required',
-            'description'=>'Description is required',
+            'title.required'=>'Title is required',
+            'description.required'=>'Description is required',
 
         ]);
   
@@ -81,8 +81,8 @@ class NewsblogController extends Controller
             $newblog['image'] =  $filename;
             $oldNewsblog ->update($newblog);
             return response()->json([
-                'staus'=>200,
-                'messeage'=>"Offer is Update is Successfully"
+                'status'=>200,
+                'message'=>"News updated  successfully"
             ]);
 
         }
@@ -94,7 +94,7 @@ class NewsblogController extends Controller
         image_delete('blogs', $newsblog->image);
         $newsblog->delete();
         return response()->json([
-           'message'=>"Offer deleted"
+           'message'=>"News  deleted successfully"
         ]);
 
     }

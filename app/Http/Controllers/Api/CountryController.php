@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Country;
 use Psy\CodeCleaner\ReturnTypePass;
+use ILluminate\Support\Str;
 
 class CountryController extends Controller
 {
@@ -15,27 +16,37 @@ class CountryController extends Controller
       return Country::all();
     }
     public function store(Request $request){
+         
+      
       $validatore =  Validator::make($request->all(),[
             'name'=>"required",
              'image'=>"required"
+        ],[
+            'name.required'=>"Name is required",
+            'image.required'=>"Image is required"
         ]);
+        
 
         if($validatore->fails()){
              return response()->json([
                 'validator_err'=>$validatore->messages()
              ]);
         }
-
         else{
-            $filename = image_upload('country', $request->image,$request->name, 64, 40);
-            $country = $validatore->validate();
-            $country['image'] = $filename;
-            Country::create($country);
-
-            return response()->json([
-                'status'=>200,
-                'message'=>"Country created Sucessfully"
-            ]);
+          
+                $filename = image_upload('country', $request->image,$request->name, 64, 40);
+                $country = $validatore->validate();
+                $country['image'] = $filename;
+                $country['slug']=Str::slug($country['name']);
+                Country::create($country);
+     
+                return response()->json([
+                    'status'=>200,
+                    'message'=>"Country created  successfully"
+                ]);
+               
+          
+           
         }
     }
     public function edit($id)
@@ -47,6 +58,8 @@ class CountryController extends Controller
     {
         $validatore =  Validator::make($request->all(), [
             'name' => "required",
+        ],[
+            'image.required' => "Name is required",
         ]);
 
         if ($validatore->fails()) {
@@ -58,11 +71,12 @@ class CountryController extends Controller
             $country = $validatore->validate();
             $filename = image_update('country', $request->image,$oldImage->image,$request->name,64, 40);
             $country['image'] = $filename;
+            $country['slug']=Str::slug($country['name']);
             $oldImage->update($country);
         }
         return response()->json([
             'status' => 200,
-            'message' => "Country Updated Sucessfully"
+            'message' => "Country  updated sucessfully"
         ]);
     }
 
@@ -71,7 +85,7 @@ class CountryController extends Controller
         image_delete('country',$country->image);
         $country->delete();
         return response()->json([
-            'message'=>"Deleted Successfully"
+            'message'=>"Country deleted successfully"
         ]);
     }
 

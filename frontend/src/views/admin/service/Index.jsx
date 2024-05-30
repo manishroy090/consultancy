@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 import axiosClient from '../../../../axios_client';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useStateContext } from '../../../context/ContextProvider';
+
 
 export default function Index() {
     const [services, setServices] = useState([]);
+    const {setNotification} = useStateContext();
+    const [count,setCount] = useState(0);
+
     const fetchData = async ()=>{
       const res = await axiosClient.get('service/index');
       setServices(res.data);
@@ -13,17 +18,22 @@ export default function Index() {
   
     useEffect(()=>{
       fetchData();  
-    },[]);
+    },[count]);
   
     const deleteAction = (id)=>{
-        axiosClient.get(`service/delete/${id}`);
+        axiosClient.get(`service/delete/${id}`).then((res)=>{
+          setNotification(res.data.message,'delete');
+          setCount(count+1);
+        }).catch(()=>{
+          setNotification("Something Went Wrong",'delete');
+        });
    
     }
   return (
-    <div>
-        <div className="relative overflow-x-auto  sm:rounded-lg bg-gray-100 shadow-xl p-4">
-        <div classNameName="flex  justify-between pr-24 ">
-          <div className="pb-4 bg-gray-100  dark:bg-gray-900">
+
+    <div className="flex flex-col justify-between overflow-x-auto  sm:rounded-lg bg-white shadow-2xl p-4">
+    <div className="flex bg-white  justify-between pr-24 ">
+    <div className="pb-4 ">
             <label htmlFor="table-search" className="sr-only">
               Search
             </label>
@@ -53,13 +63,10 @@ export default function Index() {
               />
             </div>
           </div>
-          <Link to="/dashboard/services/create">
-            <button
-              type="button"
-              className="font-semibold text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            >
-              Add
-            </button>
+          <Link to="create">
+          <span className='bg-blue-600 h-full p-3 text-white fontstyle font-semibold rounded-md fontstyle text-sm'>
+              Add Service
+            </span>
           </Link>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500  ">
@@ -121,7 +128,7 @@ export default function Index() {
                    
                       ></EditIcon>
                     </Link>
-                    <Link C
+                    <Link 
                       href="#"
                       className="font-medium text-red-600 bg-slate-200 p-2 hover:bg-black hover:text-white rounded-md dark:text-blue-500 hover:underline"
                     >
@@ -138,6 +145,6 @@ export default function Index() {
           </tbody>
         </table>
       </div>
-    </div>
+  
   )
 }

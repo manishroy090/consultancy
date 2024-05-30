@@ -21,6 +21,12 @@ class TestimonialsController extends Controller
             'designation'=>"required",
             'image'=>"required",
             'description'=>"required" 
+        ],
+        [
+            'name.required'=>"Name is required",
+            'designation.required'=>"Designation is required",
+            'description.required'=>"Description is required",
+            'image.required'=>"Image is required"
         ]);
 
 
@@ -39,7 +45,7 @@ class TestimonialsController extends Controller
             Testimonials::create($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Created Successfully"
+                'message'=>"Testimonials created successfully"
 
             ]);
         }
@@ -53,6 +59,8 @@ class TestimonialsController extends Controller
     }
 
     public function update($id,Request $request){
+
+      
         $validator =  validator::make($request->all(),[
             'name'=>'required',
             'designation'=>"required",
@@ -69,14 +77,14 @@ class TestimonialsController extends Controller
             ]);
         }
         else{
-            $oldTestimonial = Testimonials::where('id',$id)->first();
-            $filename = image_update('testimonial', $request->image,$oldTestimonial ->image,$request->name, 64, 40);
             $data =  $validator->validate();
+            $oldTestimonial = Testimonials::where('id',$id)->first();
+            $filename = image_update('testimonial', $request->image,$oldTestimonial->image,$request->name, 64, 40);
             $data['image'] = $filename;
             $oldTestimonial->update($data);
             return response()->json([
                 'status'=>200,
-                'message'=>"About us Update Successfully"
+                'message'=>"Testimonials updated successfully"
 
             ]);
         }
@@ -90,7 +98,7 @@ class TestimonialsController extends Controller
         image_delete('testimonial', $testimonials ->image);
         $testimonials->delete();
         return  response()->json([
-           'message'=>"About us Deleted"
+           'message'=>"Testimonials deleted successfully"
         ]);
 
     }

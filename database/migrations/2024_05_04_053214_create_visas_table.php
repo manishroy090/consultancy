@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('visa_type_id');
             $table->foreignId('country_id');
+            $table->string('image');
+            $table->longText('description');
+            $table->foreignId('course_id')->nullable();
+            $table->longText('working_process');
+            $table->longText('document_required');
             $table->timestamps();
         });
     }
