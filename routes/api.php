@@ -185,6 +185,7 @@ Route::controller(FrontendController::class)->group(function(){
         Route::get('/home','home');
         Route::get('/{visatypeslug}/{countryslug}','visa');
         Route::get('/blogs','blogs');
+        Route::post('/contact','contact');
       
     });
   

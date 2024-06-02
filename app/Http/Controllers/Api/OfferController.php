@@ -19,7 +19,11 @@ class OfferController extends Controller
        $validator = Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
-            'icon'=>'required'
+            'icon'=>'required',
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
         ],[
             'title.required'=>'Title is required',
             'description.required'=>'Description is required',
@@ -59,6 +63,10 @@ class OfferController extends Controller
         $validator = Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
 
         ],[
             'title.required'=>'Title is required',
@@ -77,7 +85,7 @@ class OfferController extends Controller
         else{
             $oldData = Offer::where('id',$id)->first();
             $offer = $validator->validate();
-            $filename = image_update('offer', $request->icon,$oldData ->icon,$request->title, 64, 40);
+            $filename = image_update('offer', $request->icon,$oldData->icon,$request->title, 64, 40);
             $offer['icon'] =  $filename;
             $oldData->update($offer);
         }

@@ -17,6 +17,9 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'support_number' => env('APP_NAME', '9824888696'),
+    'location' => env('APP_NAME', 'new baneshwore'),
+    'support_email'=>env('App_Support_email','support2gmail.com'),
 
     /*
     |--------------------------------------------------------------------------

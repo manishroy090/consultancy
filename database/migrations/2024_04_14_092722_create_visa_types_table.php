@@ -15,6 +15,10 @@
                 $table->id();
                 $table->string('name');
                 $table->text('slug')->nullable();
+                $table->string('meta_title')->nullable();
+                $table->string('meta_keyword')->nullable();
+                $table->longText('meta_description')->nullable();
+                $table->longText('meta_schema')->nullable();
                 $table->timestamps();
             });
         }

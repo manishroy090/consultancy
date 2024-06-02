@@ -14,6 +14,10 @@ use App\Models\Patner;
 use App\Models\Services;
 use App\Models\Whyus;
 use App\Models\Country;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactEmail;
+use App\Mail\OwnerEmail;
 
 
 class FrontendController extends Controller
@@ -69,5 +73,15 @@ class FrontendController extends Controller
         'blogs'=> $blogs
       ]);
 
+    }
+
+
+    public function contact(Request $request){
+
+     
+      $toemail = $request->email; 
+      Mail::to($toemail)->send(new ContactEmail($request->all()));
+      Mail::to("manishkuyadav090@gmail.com")->send(new OwnerEmail($request->all()));
+     return dd("mail sended ");
     }
 }

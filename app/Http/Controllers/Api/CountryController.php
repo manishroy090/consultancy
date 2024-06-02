@@ -20,7 +20,11 @@ class CountryController extends Controller
       
       $validatore =  Validator::make($request->all(),[
             'name'=>"required",
-             'image'=>"required"
+             'image'=>"required",
+             'meta_title'=>'nullable',
+             'meta_keyword'=>'nullable',
+             'meta_description'=>'nullable',
+             'meta_schema'=>'nullable'
         ],[
             'name.required'=>"Name is required",
             'image.required'=>"Image is required"
@@ -58,6 +62,10 @@ class CountryController extends Controller
     {
         $validatore =  Validator::make($request->all(), [
             'name' => "required",
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
         ],[
             'image.required' => "Name is required",
         ]);

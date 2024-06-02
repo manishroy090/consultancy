@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('image');
             $table->string('slug');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_keyword')->nullable();
+            $table->longText('meta_description')->nullable();
+            $table->longText('meta_schema')->nullable();
             $table->timestamps();
         });
     }

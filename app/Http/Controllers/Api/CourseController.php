@@ -17,6 +17,10 @@ class CourseController extends Controller
       public function store(Request $request){
         $validatore =  Validator::make($request->all(),[
               'name'=>"required",
+              'meta_title'=>'nullable',
+              'meta_keyword'=>'nullable',
+              'meta_description'=>'nullable',
+              'meta_schema'=>'nullable'
           ],[
             'name.required'=>"Name is required"
           ]);
@@ -46,6 +50,10 @@ class CourseController extends Controller
       {
           $validatore =  Validator::make($request->all(), [
               'name' => "required",
+              'meta_title'=>'nullable',
+              'meta_keyword'=>'nullable',
+              'meta_description'=>'nullable',
+              'meta_schema'=>'nullable'
           ],[
             'name.required'=>"Name is required"
           ]);

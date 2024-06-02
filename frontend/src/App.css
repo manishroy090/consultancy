@@ -90,6 +90,17 @@
     font-size: 18px;
     line-height: 1.7;
 }
+footer{
+    color: #eff1ed;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("./image/footerbg.jpg");
+
+    background-position-x: 0%, 0%;
+    background-position-y: 0%, 0%;
+    background-size: auto, auto;
+  background-size: cover;
+  background-position: center top;
+}
 
 .heading {
     font-family: "Montserrat", sans-serif;
@@ -98,7 +109,7 @@
     .sepecial {
         background: red;
         background: linear-gradient(rgba(4, 9, 30, 0.5), rgba(9, 12, 80, 0.9)),
-            url("./image/background.jpg");
+        url("./image/background.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;

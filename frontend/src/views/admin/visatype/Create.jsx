@@ -76,6 +76,7 @@ export default function Create() {
                 Meta Title
               </label>
               <input
+                onChange={handleOnChange}
                 type="text"
                 id="name"
                 name="meta_title"
@@ -92,6 +93,7 @@ export default function Create() {
                 Meta Keywords
               </label>
               <input
+                onChange={handleOnChange}
                 type="text"
                 id="name"
                 name="meta_keyword"
@@ -110,6 +112,7 @@ export default function Create() {
               Meta Description
             </label>
             <textarea
+              onChange={handleOnChange}
               type="text"
               id="name"
               name="meta_description"
@@ -126,6 +129,7 @@ export default function Create() {
               Meta Scheama
             </label>
             <textarea
+              onChange={handleOnChange}
               type="text"
               id="name"
               name="meta_schema"

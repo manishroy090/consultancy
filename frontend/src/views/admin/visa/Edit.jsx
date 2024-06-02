@@ -66,7 +66,7 @@ export default function Edit() {
   const update = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    formData.append('description',ckeditordata);
+    formData.append('description',ckeditordata.description);
     formData.append('working_process',ckeditordata.working_process);
     formData.append('document_required',ckeditordata.document_required);
     axiosClient.post(`visa/update/${id}`, formData).then((res) => {

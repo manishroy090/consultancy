@@ -25,6 +25,10 @@ class VisatypeController extends Controller
  
         $validator = Validator::make($request->all(),[
             'name'=>"required",
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
 
         ],[
             
@@ -39,6 +43,7 @@ class VisatypeController extends Controller
         }else{
             $visaType =$validator->validate();
             $visaType['slug']=Str::slug($visaType['name']);
+   
             VisaType::create($visaType);
             return response()->json([
                 'status'=>200,
@@ -59,6 +64,10 @@ class VisatypeController extends Controller
 
         $validator = Validator::make($request->all(),[
             'name'=>"required",
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
 
         ],[
             

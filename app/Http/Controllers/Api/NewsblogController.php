@@ -18,7 +18,11 @@ class NewsblogController extends Controller
        $validator = Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
-            'image'=>'required'
+            'image'=>'required',
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
 
         ],[
             'title.required'=>'Title is required',
@@ -59,6 +63,10 @@ class NewsblogController extends Controller
         $validator = Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
+            'meta_title'=>'nullable',
+            'meta_keyword'=>'nullable',
+            'meta_description'=>'nullable',
+            'meta_schema'=>'nullable'
 
         ],[
             'title.required'=>'Title is required',
@@ -77,9 +85,9 @@ class NewsblogController extends Controller
         else{
             $oldNewsblog = NewsBlog::where('id',$id)->first();
             $newblog = $validator->validate();
-            $filename = image_update('blogs', $request->image,$oldNewsblog  ->image,$request->title, 64, 40);
+            $filename = image_update('blogs', $request->image,$oldNewsblog->image,$request->title, 64, 40);
             $newblog['image'] =  $filename;
-            $oldNewsblog ->update($newblog);
+            $oldNewsblog->update($newblog);
             return response()->json([
                 'status'=>200,
                 'message'=>"News updated  successfully"
